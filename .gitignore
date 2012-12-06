@@ -2,4 +2,6 @@
 .idea/
 */gen/*
 */target/*
-tmp/
+*/tmp/*
+*/out/*
+out/
