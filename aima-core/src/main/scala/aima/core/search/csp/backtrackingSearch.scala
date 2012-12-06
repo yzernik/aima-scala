@@ -1,5 +1,7 @@
 package aima.core.search.csp
 
+import annotation.tailrec
+
 object backtrackingSearch {
   type SelectUnassignedVariable = CSP => Variable[_]
   trait OrderDomainValues {
@@ -9,6 +11,7 @@ object backtrackingSearch {
 
   def apply(select: SelectUnassignedVariable, order: OrderDomainValues, infer: Inference)(csp: CSP): Option[CSP] = {
     def backtrack[A](variable: Variable[A], csp: CSP): Option[CSP] = {
+      @tailrec
       def recur(variable: Variable[A], domain: List[A]): Option[CSP] = domain match {
         case value :: tail =>
           infer(variable, csp.reduceDomain(variable, value)) match {
