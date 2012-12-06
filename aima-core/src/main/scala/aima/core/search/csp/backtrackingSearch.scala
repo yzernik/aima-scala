@@ -3,7 +3,7 @@ package aima.core.search.csp
 object backtrackingSearch {
   type SelectUnassignedVariable = CSP => Variable[_]
   type OrderDomainValues = (Variable[_], CSP) => Set[_]
-  type Inference = CSP => Option[CSP]
+  type Inference = (Variable[_], CSP) => Option[CSP]
 
   def apply(select: SelectUnassignedVariable, order: OrderDomainValues, infer: Inference)(csp: CSP): Option[CSP] = {
     def backtrack(csp: CSP): Option[CSP] = {
@@ -11,7 +11,7 @@ object backtrackingSearch {
       val variable = select(csp)
       def recur(variable: Variable[_], domain: List[_]): Option[CSP] = domain match {
         case value :: tail =>
-          infer(csp.reduceDomain(variable, value)) match {
+          infer(variable, csp.reduceDomain(variable, value)) match {
             case Some(inferredCSP) =>
               backtrack(inferredCSP) match {
                 case result@Some(_) => result

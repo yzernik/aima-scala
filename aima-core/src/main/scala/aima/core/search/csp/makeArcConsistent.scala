@@ -16,7 +16,7 @@ object makeArcConsistent {
         revise(xi, xj, rel) match {
           case Some(revisedDomain) if revisedDomain.isEmpty => None
           case Some(revisedDomain) =>
-            val newCSP = csp.copy(variables = (csp.variables filterNot { _ == xi } ) ++ List(Variable(revisedDomain)))
+            val newCSP = csp.copy(variables = xi.copy(domain = revisedDomain) :: csp.variables filterNot { _ == xi })
             val newQueue = tail ++ (csp.neighbors(xi) map { _.variableOnRight(xi) } filterNot { _.scope._1 == xj })
             makeArcConsistent(newQueue, newCSP)
           case None => makeArcConsistent(tail, csp)

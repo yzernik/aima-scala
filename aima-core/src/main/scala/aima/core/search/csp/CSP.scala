@@ -6,6 +6,6 @@ case class CSP(variables: List[Variable[_]], constraints: List[BinaryConstraint[
 
   def constraintsSatisfied(): Boolean = variables forall { _.domain.size == 1 }
 
-  def reduceDomain[A](variable: Variable[A], value: A): CSP =
+  def reduceDomain[A](variable: Variable[A], value: Any): CSP =
     this.copy(variables = (variables filterNot { _ == variable }) ++ List(Variable(variable.num, Set(value))))
 }
