@@ -1,5 +1,6 @@
 package aima.core.search.csp
 
 object mostConstrainedVariable {
-  def apply(csp: CSP): Variable[_] = csp.variables.maxBy { variable => csp.constraints count { _.contains(variable) } }
+  def apply(csp: CSP): Assignment[_] =
+    csp.assignments maxBy {assign => csp.constraints count {_ contains assign.variable}}
 }

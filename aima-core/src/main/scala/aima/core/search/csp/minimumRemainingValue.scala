@@ -1,5 +1,5 @@
 package aima.core.search.csp
 
 object minimumRemainingValue {
-  def apply(csp: CSP): Variable[_] = csp.variables minBy { _.domain.size }
+  def apply(csp: CSP): Assignment[_] = csp.assignments minBy { _.values.size }
 }
