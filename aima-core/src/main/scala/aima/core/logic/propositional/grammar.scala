@@ -41,15 +41,28 @@ sealed abstract class Connective(left: Sentence, right: Sentence) extends Comple
   def isFalseIn(model: Map[PropositionSymbol, Boolean]): Boolean = operator(left isFalseIn model, right isFalseIn model)
   def operator(left: Boolean, right: Boolean): Boolean
 }
-case class ∧(left: Sentence, right: Sentence) extends Connective(left, right) {
-  def operator(left: Boolean, right: Boolean) = left && right
+object Connective {
+  case class ∧(left: Sentence, right: Sentence) extends Connective(left, right) {
+    def operator(left: Boolean, right: Boolean) = left && right
+  }
+  case class ∨(left: Sentence, right: Sentence) extends Connective(left, right) {
+    def operator(left: Boolean, right: Boolean) = left || right
+  }
+  case class ⇾(premise: Sentence, conclusion: Sentence) extends Connective(premise, conclusion) {
+    def operator(left: Boolean, right: Boolean) = (left && right) || !left
+  }
+  case class ⇔(left: Sentence, right: Sentence) extends Connective(left, right) {
+    def operator(left: Boolean, right: Boolean) = (left && right) || (!left && !right)
+  }
 }
-case class ∨(left: Sentence, right: Sentence) extends Connective(left, right) {
-  def operator(left: Boolean, right: Boolean) = left || right
-}
-case class ⇾(premise: Sentence, conclusion: Sentence) extends Connective(premise, conclusion) {
-  def operator(left: Boolean, right: Boolean) = (left && right) || !left
-}
-case class ⇔(left: Sentence, right: Sentence) extends Connective(left, right) {
-  def operator(left: Boolean, right: Boolean) = (left && right) || (!left && !right)
+
+object grammar {
+  implicit final class PropositionalLogic(left: Sentence) {
+    def ∧(right: Sentence): Connective.∧ = Connective.∧(left, right)
+    def ∨(right: Sentence): Connective.∨ = Connective.∨(left, right)
+    def ⇾(right: Sentence): Connective.⇾ = Connective.⇾(left, right)
+    def ⇔(right: Sentence): Connective.⇔ = Connective.⇔(left, right)
+  }
+
+  implicit def booleanToPropositionalSymbol(bool: Boolean): PropositionSymbol = if (bool) True else False
 }

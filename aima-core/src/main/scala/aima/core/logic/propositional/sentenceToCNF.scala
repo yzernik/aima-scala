@@ -1,28 +1,31 @@
 package aima.core.logic.propositional
 
+import aima.core.logic.propositional.Connective._
+import aima.core.logic.propositional.grammar._
+
 object sentenceToCNF extends SentenceToCNF {
   implicit def apply(sentence: Sentence): CNFSentence = {
     def removeImplications(sentence: Sentence): Sentence = sentence match {
       case x: PropositionSymbol => x
       case ¬(x) => ¬(removeImplications(x))
-      case left ∨ right => ∨(removeImplications(left), removeImplications(right))
-      case left ∧ right => ∧(removeImplications(left), removeImplications(right))
-      case premise ⇾ conclusion => ∨(¬(removeImplications(premise)), removeImplications(conclusion))
-      case left ⇔ right => removeImplications(∧(⇾(left, right), ⇾(right, left)))
+      case left ∨ right => removeImplications(left) ∨ removeImplications(right)
+      case left ∧ right => removeImplications(left) ∧ removeImplications(right)
+      case premise ⇾ conclusion => ¬(removeImplications(premise)) ∨ removeImplications(conclusion)
+      case left ⇔ right => removeImplications((left ⇾ right) ∧ (right ⇾ left))
     }
 
     def negationsIn(sentence: Sentence): Sentence = sentence match {
       case x: PropositionSymbol => x
       case ¬(x) => negationsIn(negate(x))
-      case left ∨ right => ∨(negationsIn(left), negationsIn(right))
-      case left ∧ right => ∧(negationsIn(left), negationsIn(right))
+      case left ∨ right => negationsIn(left) ∨ negationsIn(right)
+      case left ∧ right => negationsIn(left) ∧ negationsIn(right)
     }
 
     def negate(sentence: Sentence): Sentence = sentence match {
       case x: PropositionSymbol => ¬(x)
       case ¬(x) => x
-      case left ∨ right => ∧(¬(left), ¬(right))
-      case left ∧ right => ∨(¬(left), ¬(right))
+      case left ∨ right => ¬(left) ∧ ¬(right)
+      case left ∧ right => ¬(left) ∨ ¬(right)
     }
 
     def distrib(sentence: Sentence): Set[Clause] = sentence match {
