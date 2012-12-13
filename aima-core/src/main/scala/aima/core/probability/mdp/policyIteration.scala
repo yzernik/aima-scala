@@ -28,7 +28,7 @@ object policyIteration {
   def apply[S, A](k: Int, gamma: Double)(mdp: MarkovDecisionProcess[S, A]): Policy[S, A] = {
     val policyEvaluation: PolicyEvaluation[S, A] = (policy, utilities, mdp) => {
       @tailrec
-      def recur(times: Seq[Int], states: List[S], utilities: Map[S, Double], next: Map[S, Double]): Map[S, Double] =
+      def recur(times: List[Int], states: List[S], utilities: Map[S, Double], next: Map[S, Double]): Map[S, Double] =
         (times, states) match {
           case (_, state :: tail) =>
             val sum = (mdp.states map {sPrime => mdp.transition(sPrime, state, policy(state)) * utilities(sPrime)}).sum
@@ -36,7 +36,7 @@ object policyIteration {
           case (_ :: tail, Nil) => recur(tail, mdp.states.toList, next, Map())
           case (Nil, Nil) => next
         }
-      recur(0 to k, mdp.states.toList, utilities, Map())
+      recur((0 to k).toList, mdp.states.toList, utilities, Map())
     }
     policyIteration(policyEvaluation)(mdp)
   }
