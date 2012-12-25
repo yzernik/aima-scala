@@ -46,7 +46,7 @@ object unify extends Unifier {
     def unifyVars(variable: Variable, x: Term, θ: Substitution): Option[Substitution] = {
       (θ get variable, x) match {
         case (Some(value), _) => unifyTerms(List(value), List(x), θ)
-        case (None, xVar: Variable) if θ contains xVar => unifyTerms(List(variable), List(θ get xVar get), θ)
+        case (None, xVar: Variable) if θ contains xVar => unifyTerms(List(variable), List(θ(xVar)), θ)
         case (None, _) => if (occurCheck(variable, x)) None else Some(θ + (variable → x))
       }
     }

@@ -2,7 +2,7 @@ package aima.core.logic.fol
 
 import aima.core.logic.fol.Connective._
 import aima.core.logic.fol.grammar.FOLLogic
-import aima.core.logic.fol.Predef._
+import aima.core.logic.fol.Defaults.defaultStandardFunction
 
 object sentenceToCNF extends SentenceToCNF {
   def apply(sub: Substitute, standardize: Standardize)
@@ -78,6 +78,5 @@ object sentenceToCNF extends SentenceToCNF {
     val distributed = distrib(droppedUniversals)
     CNFSentence(distributed)
   }
-  def apply(sentence: Sentence): CNFSentence =
-    sentenceToCNF(substitute, standardize)(sentence)(implicitly[StandardFunction])
+  def apply(sentence: Sentence): CNFSentence = sentenceToCNF(substitute, standardize)(sentence)
 }

@@ -1,5 +1,7 @@
 package aima.core.logic.fol
 
+import aima.core.logic.fol.DefiniteClause.definiteClauseToImplicationDefinite
+
 final class KB(
   val sentences: Set[Sentence],
   val clauses: Set[Clause],
@@ -8,6 +10,8 @@ final class KB(
   val equalities: Set[TermEqual],
   val convertToCNF: SentenceToCNF,
   val unifier: Unifier) extends KnowledgeBase {self =>
+  val implicationDefinites: Set[ImplicationDefinite] = definiteClauses map definiteClauseToImplicationDefinite
+
   def ask(sentence: Sentence): InferenceResult = ???
 
   protected def store(sentence: Sentence): KB = {

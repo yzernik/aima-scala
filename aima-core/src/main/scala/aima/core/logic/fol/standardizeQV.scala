@@ -1,6 +1,6 @@
 package aima.core.logic.fol
 
-import aima.core.logic.fol.Predef._
+import aima.core.logic.fol.Defaults.defaultStandardVariable
 
 object standardizeQV extends StandardizeQV {
   // Standardizes between the sentences in the sets, not recursively.
@@ -19,15 +19,15 @@ object standardizeQV extends StandardizeQV {
     val standardizedSentences = sameVarSentences flatMap {case (_, quantifiers) =>
       quantifiers.map[Quantifier, Set[Quantifier]] {
         case ∀(variable, s) =>
-          val newVariable = standardVariable(variable)
+          val newVariable = Variable(standardVariable(variable))
           ∀(newVariable, sub(Map(variable → newVariable), s))
         case ∃(variable, s) =>
-          val newVariable = standardVariable(variable)
+          val newVariable = Variable(standardVariable(variable))
           ∃(newVariable, sub(Map(variable → newVariable), s))
       }
     }
 
     groupedSentences.getOrElse(false, Set()) ++ standardizedSentences
   }
-  def apply(sentences: Set[Sentence]) = standardizeQV(substitute)(sentences)(implicitly[StandardVariable])
+  def apply(sentences: Set[Sentence]) = standardizeQV(substitute)(sentences)
 }

@@ -2,11 +2,11 @@ package aima.core.logic.fol
 
 import java.util.concurrent.atomic.AtomicLong
 
-object Predef {
+trait FOLDefaults {
   implicit val defaultStandardVariable = new DefaultStandardVariable()
   final class DefaultStandardVariable extends StandardVariable {
     private val number = new AtomicLong()
-    def apply(variable: Variable) = Variable(variable.symbol + "$$" + number.incrementAndGet() + "$")
+    def apply(variable: Variable): String = variable.symbol + "$$" + number.incrementAndGet() + "$"
   }
   implicit val defaultStandardFunction = new DefaultStandardFunction()
   final class DefaultStandardFunction extends StandardFunction{

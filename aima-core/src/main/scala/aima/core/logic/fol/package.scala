@@ -12,8 +12,10 @@ package object fol {
   type StandardizeQV = Set[Sentence] => Set[Sentence]
   // Standardizes recursively any sentence made from grammar
   type Standardize = Sentence => Sentence
-  // Produces a unique variable from the given variable, thread-safe
-  type StandardVariable = Variable => Variable
+  // Produces a unique variable symbol from the given variable, thread-safe
+  type StandardVariable = Variable => String
   // Produces a unique function given the set of terms, thread-safe
   type StandardFunction = Set[Term] => AFunction
+
+  object Defaults extends FOLDefaults
 }
