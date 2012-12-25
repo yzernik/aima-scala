@@ -1,45 +1,53 @@
 package aima.core.logic.fol
 
-abstract class Sentence
+import aima.core.logic.fol.Connective.{∧, ∨}
 
-sealed abstract class AtomicSentence(val terms: Set[Term]) extends Sentence
+abstract class Sentence(val terms: Set[Term])
+
+abstract class AtomicSentence(terms: Set[Term]) extends Sentence(terms)
 case class Predicate(symbol: String, override val terms: Set[Term]) extends AtomicSentence(terms)
+object Predicate {
+  val True = Predicate("True", Set())
+  val False = Predicate("False", Set())
+}
 case class TermEqual(left: Term, right: Term) extends AtomicSentence(Set(left, right))
 
-sealed abstract class ComplexSentence(sentences: Set[Sentence]) extends Sentence {
+abstract class ComplexSentence(val sentences: Set[Sentence]) extends Sentence(sentences flatMap {_.terms}) {
   def args: List[Sentence] = sentences.to[List]
-  def hasSameOpAs(other: ComplexSentence): Boolean
 }
-case class ¬(sentence: Sentence) extends ComplexSentence(Set(sentence)) {
-  def hasSameOpAs(other: ComplexSentence): Boolean = other.isInstanceOf[¬]
-}
+case class ¬(sentence: Sentence) extends ComplexSentence(Set(sentence))
 
 sealed abstract class Connective(left: Sentence, right: Sentence) extends ComplexSentence(Set(left, right))
-case class ∧(left: Sentence, right: Sentence) extends Connective(left, right) {
-  def hasSameOpAs(other: ComplexSentence): Boolean = other.isInstanceOf[∧]
+object Connective {
+  case class ∧(left: Sentence, right: Sentence) extends Connective(left, right)
+  case class ∨(left: Sentence, right: Sentence) extends Connective(left, right)
+  case class ⇾(premise: Sentence, conclusion: Sentence) extends Connective(premise, conclusion)
+  case class ⇔(left: Sentence, right: Sentence) extends Connective(left, right)
 }
-case class ∨(left: Sentence, right: Sentence) extends Connective(left, right) {
-  def hasSameOpAs(other: ComplexSentence): Boolean = other.isInstanceOf[∨]
-}
-case class ⇾(premise: Sentence, conclusion: Sentence) extends Connective(premise, conclusion) {
-  def hasSameOpAs(other: ComplexSentence): Boolean = other.isInstanceOf[⇾]
-}
-case class ⇔(left: Sentence, right: Sentence) extends Connective(left, right) {
-  def hasSameOpAs(other: ComplexSentence): Boolean = other.isInstanceOf[⇔]
-}
-
-case class QuantifiedSentence(quantifier: Quantifier, symbols: Set[Variable], sentence: Sentence) extends ComplexSentence(Set(sentence)) {
-  override def hasSameOpAs(other: ComplexSentence): Boolean = other match {
-    case that: QuantifiedSentence => that.quantifier == this.quantifier
-    case _ => false
-  }
-}
-
-sealed abstract class Quantifier
-case object ∀ extends Quantifier
-case object ∃ extends Quantifier
+sealed abstract class Quantifier(val variable: Variable, val sentence: Sentence) extends ComplexSentence(Set(sentence))
+case class ∀(override val variable: Variable, override val sentence: Sentence) extends Quantifier(variable, sentence)
+case class ∃(override val variable: Variable, override val sentence: Sentence) extends Quantifier(variable, sentence)
 
 sealed abstract class Term(val symbol: String)
-case class Function(override val symbol: String, terms: Set[Term]) extends Term(symbol)
-case class Constant(override val symbol: String) extends Term(symbol)
+sealed abstract class AFunction(symbol: String, val terms: Set[Term]) extends Term(symbol)
+case class Function(override val symbol: String, override val terms: Set[Term]) extends AFunction(symbol, terms)
+case class ConstantFunction(override val symbol: String) extends AFunction(symbol, Set())
 case class Variable(override val symbol: String) extends Term(symbol)
+
+object grammar {
+  implicit final class FOLLogic(left: Sentence) {
+    def ∧(right: Sentence): Connective.∧ = Connective.∧(left, right)
+    def ∨(right: Sentence): Connective.∨ = Connective.∨(left, right)
+    def ⇾(right: Sentence): Connective.⇾ = Connective.⇾(left, right)
+    def ⇔(right: Sentence): Connective.⇔ = Connective.⇔(left, right)
+  }
+
+  def negate(sentence: Sentence): Sentence = sentence match {
+    case x: AtomicSentence => ¬(x)
+    case ¬(x) => x
+    case left ∨ right => ¬(left) ∧ ¬(right)
+    case left ∧ right => ¬(left) ∨ ¬(right)
+    case ∀(symbol, s) => ∃(symbol, ¬(s))
+    case ∃(symbol, s) => ∀(symbol, ¬(s))
+  }
+}

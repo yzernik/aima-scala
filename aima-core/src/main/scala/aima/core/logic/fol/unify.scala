@@ -1,14 +1,26 @@
 package aima.core.logic.fol
 
-import annotation.tailrec
+import scala.annotation.tailrec
+import aima.core.logic.fol.Connective._
 
-object unify {
+object unify extends Unifier {
+  type OccurCheck = (Variable, Term) => Boolean
   def apply(occurCheck: OccurCheck)(left: Sentence, right: Sentence): Option[Substitution] = {
+    def hasSameOp(a: ComplexSentence, b: ComplexSentence): Boolean = (a, b) match {
+      case (_: ¬, _: ¬) => true
+      case (_: ∨, _: ∨) => true
+      case (_: ∧, _: ∧) => true
+      case (_: ⇾, _: ⇾) => true
+      case (_: ⇔, _: ⇔) => true
+      case (_: ∀, _: ∀) => true
+      case (_: ∃, _: ∃) => true
+      case _ => false
+    }
     def unifySentences(left: List[Sentence], right: List[Sentence], θ: Substitution): Option[Substitution] = {
       (left, right) match {
         case (x :: xtail, y :: ytail) => (x, y) match {
           case (a: AtomicSentence, b: AtomicSentence) => unifyTerms(a.terms.to[List], b.terms.to[List], θ)
-          case (a: ComplexSentence, b: ComplexSentence) if a hasSameOpAs b => unifySentences(a.args, b.args, θ) match {
+          case (a: ComplexSentence, b: ComplexSentence) if hasSameOp(a, b) => unifySentences(a.args, b.args, θ) match {
             case Some(substitution) => unifySentences(xtail, ytail, substitution)
             case None => None
           }
@@ -40,4 +52,6 @@ object unify {
     }
     unifySentences(List(left), List(right), Map())
   }
+  // Default implementation ommits occurCheck
+  def apply(left: Sentence, right: Sentence): Option[Substitution] = unify((variable, term) => false)(left, right)
 }
