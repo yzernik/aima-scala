@@ -1,9 +1,9 @@
 package aima.core.logic.fol
 
-import scala.annotation.tailrec
 import aima.core.logic.fol.Connective._
+import scala.annotation.tailrec
 
-object unify extends Unifier {
+object unify {
   type OccurCheck = (Variable, Term) => Boolean
   def apply(occurCheck: OccurCheck)(left: Sentence, right: Sentence): Option[Substitution] = {
     def hasSameOp(a: ComplexSentence, b: ComplexSentence): Boolean = (a, b) match {

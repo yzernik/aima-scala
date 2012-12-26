@@ -2,12 +2,9 @@ package aima.core.logic.fol
 
 import aima.core.logic.fol.Connective._
 import aima.core.logic.fol.grammar.FOLLogic
-import aima.core.logic.fol.Defaults.defaultStandardFunction
 
-object sentenceToCNF extends SentenceToCNF {
-  def apply(sub: Substitute, standardize: Standardize)
-    (sentence: Sentence)
-    (implicit standardFunction: StandardFunction): CNFSentence = {
+object sentenceToCNF {
+  def apply(sentence: Sentence)(implicit standardFunction: StandardFunction): CNFSentence = {
     def removeImplications(sentence: Sentence): Sentence = sentence match {
       case x: AtomicSentence => x
       case ¬(x) => ¬(removeImplications(x))
@@ -47,7 +44,7 @@ object sentenceToCNF extends SentenceToCNF {
         case ∀(variable, s) => ∀(variable, removeExistentials(s))
         case ∃(variable, s) =>
           val freeVariables: Set[Term] = collectSentenceFreeVariables(Set(), s).toSet
-          sub(Map(variable → standardFunction(freeVariables)), sentence)
+          substitute(Map(variable → standardFunction(freeVariables)), sentence)
       }
     }
 
@@ -72,11 +69,10 @@ object sentenceToCNF extends SentenceToCNF {
 
     val eliminateImplications = removeImplications(sentence)
     val moveNotInwards = negationsIn(eliminateImplications)
-    val standardizeVariables = standardize(moveNotInwards)
+    val standardizeVariables = standardizeSentence(moveNotInwards)
     val skolemized = removeExistentials(standardizeVariables)
     val droppedUniversals = removeUniversals(skolemized)
     val distributed = distrib(droppedUniversals)
     CNFSentence(distributed)
   }
-  def apply(sentence: Sentence): CNFSentence = sentenceToCNF(substitute, standardize)(sentence)
 }

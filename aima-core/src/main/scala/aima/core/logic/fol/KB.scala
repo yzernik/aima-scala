@@ -1,5 +1,6 @@
 package aima.core.logic.fol
 
+import aima.core.logic.fol.Defaults._
 import aima.core.logic.fol.DefiniteClause.definiteClauseToImplicationDefinite
 
 final class KB(
@@ -7,15 +8,13 @@ final class KB(
   val clauses: Set[Clause],
   val definiteClauses: Set[DefiniteClause],
   val predicates: Map[String, Set[Predicate]],
-  val equalities: Set[TermEqual],
-  val convertToCNF: SentenceToCNF,
-  val unifier: Unifier) extends KnowledgeBase {self =>
+  val equalities: Set[TermEqual]) extends KnowledgeBase {self =>
   val implicationDefinites: Set[ImplicationDefinite] = definiteClauses map definiteClauseToImplicationDefinite
 
   def ask(sentence: Sentence): InferenceResult = ???
 
   protected def store(sentence: Sentence): KB = {
-    val cnf = convertToCNF(sentence)
+    val cnf = sentenceToCNF(sentence)
     if (!sentences(sentence) && !(cnf.clauses forall clauses)) {
       val newSentences = sentences + sentence
       val newClauses = clauses ++ cnf.clauses
@@ -40,7 +39,7 @@ final class KB(
           case x: TermEqual => Some(x)
         }
       })
-      new KB(newSentences, newClauses, newDefiniteClauses, newPredicates, newEqualities, convertToCNF, unifier)
+      new KB(newSentences, newClauses, newDefiniteClauses, newPredicates, newEqualities)
     } else {
       self
     }
@@ -48,10 +47,10 @@ final class KB(
 
   def fetch(literal: Literal): Set[Substitution] = literal.sentence match {
     case Predicate(symbol, terms) => predicates.get(symbol) match {
-      case Some(matchingPredicates) => matchingPredicates flatMap {unifier(literal.sentence, _)}
+      case Some(matchingPredicates) => matchingPredicates flatMap {unify(literal.sentence, _)}
       case None => Set()
     }
-    case x: TermEqual => equalities flatMap {unifier(x, _)}
+    case x: TermEqual => equalities flatMap {unify(x, _)}
   }
 
   def fetch(literals: List[Literal]): Set[Substitution] = {
