@@ -53,14 +53,6 @@ final class KB(
     case x: TermEqual => equalities flatMap {unify(x, _)}
   }
 
-  def fetch(literals: List[Literal]): Set[Substitution] = {
-    def converge(subs1: Set[Substitution], subs2: Set[Substitution]): Set[Substitution] = {
-      def merge(sub1: Map[Variable, Term], sub2: Map[Variable, Term]): Option[Map[Variable, Term]] = {
-        val conflict = sub1 exists {case (variable, term) => (sub2 contains variable) && sub2(variable) != term}
-        if (conflict) None else Some(sub1 ++ sub2)
-      }
-      subs1 flatMap {sub1 => subs2 flatMap {merge(sub1, _)}}
-    }
-    literals map fetch reduce converge
-  }
+  def fetch(literals: List[Literal]): Set[Substitution] =
+    literals map fetch reduce {(subs1, subs2) => subs1 flatMap {sub1 => subs2 flatMap {unify.merge(sub1, _)}}}
 }

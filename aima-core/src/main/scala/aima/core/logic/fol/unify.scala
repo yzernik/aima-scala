@@ -5,7 +5,15 @@ import scala.annotation.tailrec
 
 object unify {
   type OccurCheck = (Variable, Term) => Boolean
-  def apply(occurCheck: OccurCheck)(left: Sentence, right: Sentence): Option[Substitution] = {
+
+  def apply(left: Sentence, right: Sentence): Option[Substitution] =
+    unify(left, right, Map())
+
+  // Default implementation ommits occurCheck
+  def apply(left: Sentence, right: Sentence, θ: Substitution): Option[Substitution] =
+    unify((variable, term) => false)(left, right, θ)
+
+  def apply(occurCheck: OccurCheck)(left: Sentence, right: Sentence, θ: Substitution): Option[Substitution] = {
     def hasSameOp(a: ComplexSentence, b: ComplexSentence): Boolean = (a, b) match {
       case (_: ¬, _: ¬) => true
       case (_: ∨, _: ∨) => true
@@ -50,8 +58,11 @@ object unify {
         case (None, _) => if (occurCheck(variable, x)) None else Some(θ + (variable → x))
       }
     }
-    unifySentences(List(left), List(right), Map())
+    unifySentences(List(left), List(right), θ)
   }
-  // Default implementation ommits occurCheck
-  def apply(left: Sentence, right: Sentence): Option[Substitution] = unify((variable, term) => false)(left, right)
+
+  def merge(sub1: Map[Variable, Term], sub2: Map[Variable, Term]): Option[Map[Variable, Term]] = {
+    val conflict = sub1 exists {case (variable, term) => (sub2 contains variable) && sub2(variable) != term}
+    if (conflict) None else Some(sub1 ++ sub2)
+  }
 }
