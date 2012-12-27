@@ -30,11 +30,11 @@ object PropositionalLogicParser extends JavaTokenParsers {
     case Some(_)~term => ¬(term)
   }
 
-  def pSymbol: Parser[Sentence] = ident ^^ {
+  def pSymbol: Parser[Sentence] = """[A-Z][a-z0-9A-Z]*""".r ^^ {
     case x if x == "True" => AtomicSentence(True)
     case x if x == "False" => AtomicSentence(False)
     case x => AtomicSentence(PSymbol(x))
-  } | "("~>sentence<~")" | "["~>sentence<~"]" | sentence
+  } | "("~>sentence<~")" | sentence
 
   def parse(in: String) = parseAll(sentence,in).get
 }

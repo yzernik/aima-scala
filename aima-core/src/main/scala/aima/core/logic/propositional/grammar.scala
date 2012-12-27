@@ -7,7 +7,12 @@ abstract class Sentence {
 }
 
 sealed abstract class PropositionSymbol(val symbol: String) extends Sentence {
+  require(PropositionSymbol.compiledSymbolPattern.matcher(symbol).matches(), s"Symbol $symbol did not match required " +
+    "regex [A-Z][a-z0-9A-Z]* for symbols")
   lazy val symbols: Set[PropositionSymbol] = Set(this)
+}
+private object PropositionSymbol {
+  val compiledSymbolPattern = """[A-Z][a-z0-9A-Z]*""".r.pattern
 }
 case class PSymbol(override val symbol: String) extends PropositionSymbol(symbol) {
   def isTrueIn(model: Map[PropositionSymbol, Boolean]) = model get this getOrElse false
