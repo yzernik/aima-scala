@@ -12,20 +12,24 @@ sealed abstract class PropositionSymbol(val symbol: String) extends Sentence {
 case class PSymbol(override val symbol: String) extends PropositionSymbol(symbol) {
   def isTrueIn(model: Map[PropositionSymbol, Boolean]) = model get this getOrElse false
   def isFalseIn(model: Map[PropositionSymbol, Boolean]) = !(model get this getOrElse true)
+  override val toString: String = symbol
 }
 case object True extends PropositionSymbol("True") {
   def isTrueIn(model: Map[PropositionSymbol, Boolean]) = true
   def isFalseIn(model: Map[PropositionSymbol, Boolean]) = false
+  override val toString: String = "True"
 }
 case object False extends PropositionSymbol("False") {
   def isTrueIn(model: Map[PropositionSymbol, Boolean]) = false
   def isFalseIn(model: Map[PropositionSymbol, Boolean]) = true
+  override val toString: String = "False"
 }
 
 case class AtomicSentence(symbol: PropositionSymbol) extends Sentence {
   def isTrueIn(model: Map[PropositionSymbol, Boolean]): Boolean = symbol isTrueIn model
   def isFalseIn(model: Map[PropositionSymbol, Boolean]) = symbol isFalseIn model
   lazy val symbols: Set[PropositionSymbol] = Set(symbol)
+  override val toString: String = symbol.symbol
 }
 
 abstract class ComplexSentence(sentences: Traversable[Sentence]) extends Sentence {
@@ -34,6 +38,7 @@ abstract class ComplexSentence(sentences: Traversable[Sentence]) extends Sentenc
 case class ¬(sentence: Sentence) extends ComplexSentence(List(sentence)) {
   def isTrueIn(model: Map[PropositionSymbol, Boolean]): Boolean = !(sentence isTrueIn model)
   def isFalseIn(model: Map[PropositionSymbol, Boolean]) = !(sentence isFalseIn model)
+  override val toString: String = s"(~$sentence)"
 }
 
 sealed abstract class Connective(left: Sentence, right: Sentence) extends ComplexSentence(List(left, right)) {
@@ -44,15 +49,19 @@ sealed abstract class Connective(left: Sentence, right: Sentence) extends Comple
 object Connective {
   case class ∧(left: Sentence, right: Sentence) extends Connective(left, right) {
     def operator(left: Boolean, right: Boolean) = left && right
+    override val toString: String = s"($left & $right)"
   }
   case class ∨(left: Sentence, right: Sentence) extends Connective(left, right) {
     def operator(left: Boolean, right: Boolean) = left || right
+    override val toString: String = s"($left | $right)"
   }
   case class ⇾(premise: Sentence, conclusion: Sentence) extends Connective(premise, conclusion) {
     def operator(left: Boolean, right: Boolean) = (left && right) || !left
+    override val toString: String = s"($premise => $conclusion)"
   }
   case class ⇔(left: Sentence, right: Sentence) extends Connective(left, right) {
     def operator(left: Boolean, right: Boolean) = (left && right) || (!left && !right)
+    override val toString: String = s"($left <=> $right)"
   }
 }
 
