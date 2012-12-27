@@ -16,8 +16,8 @@ class PropositionalParserTest
       val string = "A"
       When("it is parsed")
       val result = parse(string)
-      Then("AtomicSentence(PSymbol(A)) is the result")
-      result should equal(AtomicSentence(PSymbol("A")))
+      Then("PSymbol(A) is the result")
+      result should equal(PSymbol("A"))
     }
 
     scenario("¬(A)") {
@@ -25,8 +25,8 @@ class PropositionalParserTest
       val string = "~A"
       When("it is parsed")
       val result = parse(string)
-      Then("¬(AtomicSentence(PSymbol(A))) is the result")
-      result should equal(¬(AtomicSentence(PSymbol("A"))))
+      Then("¬(PSymbol(A)) is the result")
+      result should equal(¬(PSymbol("A")))
     }
 
     scenario("A ∨ B") {
@@ -34,8 +34,8 @@ class PropositionalParserTest
       val string = "A | B"
       When("it is parsed")
       val result = parse(string)
-      Then("AtomicSentence(PSymbol(A)) ∨ AtomicSentence(PSymbol(B)) is the result")
-      result should equal(AtomicSentence(PSymbol("A")) ∨ AtomicSentence(PSymbol("B")))
+      Then("PSymbol(A) ∨ PSymbol(B) is the result")
+      result should equal(PSymbol("A") ∨ PSymbol("B"))
     }
 
     scenario("A ∧ B") {
@@ -43,8 +43,8 @@ class PropositionalParserTest
       val string = "A & B"
       When("it is parsed")
       val result = parse(string)
-      Then("AtomicSentence(PSymbol(A)) ∧ AtomicSentence(PSymbol(B)) is the result")
-      result should equal(AtomicSentence(PSymbol("A")) ∧ AtomicSentence(PSymbol("B")))
+      Then("PSymbol(A) ∧ PSymbol(B) is the result")
+      result should equal(PSymbol("A") ∧ PSymbol("B"))
     }
 
     scenario("A ⇾ B") {
@@ -52,8 +52,8 @@ class PropositionalParserTest
       val string = "A => B"
       When("it is parsed")
       val result = parse(string)
-      Then("AtomicSentence(PSymbol(A)) ⇾ AtomicSentence(PSymbol(B)) is the result")
-      result should equal(AtomicSentence(PSymbol("A")) ⇾ AtomicSentence(PSymbol("B")))
+      Then("PSymbol(A) ⇾ PSymbol(B) is the result")
+      result should equal(PSymbol("A") ⇾ PSymbol("B"))
     }
 
     scenario("A ⇔ B") {
@@ -61,8 +61,8 @@ class PropositionalParserTest
       val string = "A <=> B"
       When("it is parsed")
       val result = parse(string)
-      Then("AtomicSentence(PSymbol(A)) ⇔ AtomicSentence(PSymbol(B)) is the result")
-      result should equal(AtomicSentence(PSymbol("A")) ⇔ AtomicSentence(PSymbol("B")))
+      Then("PSymbol(A) ⇔ PSymbol(B) is the result")
+      result should equal(PSymbol("A") ⇔ PSymbol("B"))
     }
   }
 
@@ -72,16 +72,16 @@ class PropositionalParserTest
       val string = "A & ~B"
       When("it is parsed")
       val result = parse(string)
-      Then("AtomicSentence(PSymbol(A)) ∧ ¬(AtomicSentence(PSymbol(B))) is the result")
-      result should equal(AtomicSentence(PSymbol("A")) ∧ ¬(AtomicSentence(PSymbol("B"))))
+      Then("PSymbol(A) ∧ ¬(PSymbol(B)) is the result")
+      result should equal(PSymbol("A") ∧ ¬(PSymbol("B")))
     }
     scenario("A ∧ B ∨ C") {
       Given("the string \"A & B | C\"")
       val string = "A & B | C"
       When("it is parsed")
       val result = parse(string)
-      Then("(AtomicSentence(PSymbol(A)) ∧ AtomicSentence(PSymbol(B))) ∨ AtomicSentence(PSymbol(C)) is the result")
-      result should equal((AtomicSentence(PSymbol("A")) ∧ AtomicSentence(PSymbol("B"))) ∨ AtomicSentence(PSymbol("C")))
+      Then("(PSymbol(A) ∧ PSymbol(B)) ∨ PSymbol(C) is the result")
+      result should equal((PSymbol("A") ∧ PSymbol("B")) ∨ PSymbol("C"))
     }
 
     scenario("A ⇾ B ∨ C") {
@@ -89,8 +89,8 @@ class PropositionalParserTest
       val string = "A => B | C"
       When("it is parsed")
       val result = parse(string)
-      Then("AtomicSentence(PSymbol(A)) ⇾ (AtomicSentence(PSymbol(B)) ∨ AtomicSentence(PSymbol(C))) is the result")
-      result should equal(AtomicSentence(PSymbol("A")) ⇾ (AtomicSentence(PSymbol("B")) ∨ AtomicSentence(PSymbol("C"))))
+      Then("PSymbol(A) ⇾ (PSymbol(B) ∨ PSymbol(C)) is the result")
+      result should equal(PSymbol("A") ⇾ (PSymbol("B") ∨ PSymbol("C")))
     }
 
     scenario("A ∧ B ⇾ C") {
@@ -98,8 +98,8 @@ class PropositionalParserTest
       val string = "A & B => C"
       When("it is parsed")
       val result = parse(string)
-      Then("(AtomicSentence(PSymbol(A)) ∧ AtomicSentence(PSymbol(B))) ⇾ AtomicSentence(PSymbol(C)) is the result")
-      result should equal((AtomicSentence(PSymbol("A")) ∧ AtomicSentence(PSymbol("B"))) ⇾ AtomicSentence(PSymbol("C")))
+      Then("(PSymbol(A) ∧ PSymbol(B)) ⇾ PSymbol(C) is the result")
+      result should equal((PSymbol("A") ∧ PSymbol("B")) ⇾ PSymbol("C"))
     }
   }
 
@@ -109,8 +109,8 @@ class PropositionalParserTest
       val string = "A & (B | C)"
       When("it is parsed")
       val result = parse(string)
-      Then("AtomicSentence(PSymbol(A)) ∧ (AtomicSentence(PSymbol(B)) ∨ AtomicSentence(PSymbol(C))) is the result")
-      result should equal(AtomicSentence(PSymbol("A")) ∧ (AtomicSentence(PSymbol("B")) ∨ AtomicSentence(PSymbol("C"))))
+      Then("PSymbol(A) ∧ (PSymbol(B) ∨ PSymbol(C)) is the result")
+      result should equal(PSymbol("A") ∧ (PSymbol("B") ∨ PSymbol("C")))
     }
 
     scenario("(A ⇾ B) ∨ C") {
@@ -118,8 +118,8 @@ class PropositionalParserTest
       val string = "(A => B) | C"
       When("it is parsed")
       val result = parse(string)
-      Then("(AtomicSentence(PSymbol(A)) ⇾ AtomicSentence(PSymbol(B))) ∨ AtomicSentence(PSymbol(C)) is the result")
-      result should equal((AtomicSentence(PSymbol("A")) ⇾ AtomicSentence(PSymbol("B"))) ∨ AtomicSentence(PSymbol("C")))
+      Then("(PSymbol(A) ⇾ PSymbol(B)) ∨ PSymbol(C) is the result")
+      result should equal((PSymbol("A") ⇾ PSymbol("B")) ∨ PSymbol("C"))
     }
 
     scenario("A ∧ (B ⇾ C)") {
@@ -127,8 +127,8 @@ class PropositionalParserTest
       val string = "A & (B => C)"
       When("it is parsed")
       val result = parse(string)
-      Then("AtomicSentence(PSymbol(A)) ∧ (AtomicSentence(PSymbol(B)) ⇾ AtomicSentence(PSymbol(C))) is the result")
-      result should equal(AtomicSentence(PSymbol("A")) ∧ (AtomicSentence(PSymbol("B")) ⇾ AtomicSentence(PSymbol("C"))))
+      Then("PSymbol(A) ∧ (PSymbol(B) ⇾ PSymbol(C)) is the result")
+      result should equal(PSymbol("A") ∧ (PSymbol("B") ⇾ PSymbol("C")))
     }
   }
 
@@ -140,9 +140,9 @@ class PropositionalParserTest
         b <- listOfN(scala.util.Random.nextInt(6), alphaNumChar)
       } yield (a :: b).mkString
 
-      val genAtomic: Gen[AtomicSentence] = for {
+      val genAtomic: Gen[PropositionSymbol] = for {
         symbol <- genSymbol
-      } yield AtomicSentence(PSymbol(symbol))
+      } yield PSymbol(symbol)
 
       def complexSentences(left: Sentence, right: Sentence): List[ComplexSentence] =
         List(¬(left), left ∨ right, left ∧ right, left ⇾ right, left ⇔ right)

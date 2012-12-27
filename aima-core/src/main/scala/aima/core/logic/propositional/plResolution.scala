@@ -1,7 +1,7 @@
 package aima.core.logic.propositional
 
-import annotation.tailrec
 import aima.core.logic.propositional.grammar.PropositionalLogic
+import scala.annotation.tailrec
 
 object plResolution {
   def apply(sentenceToCNF: SentenceToCNF, plResolve: PLResolve)(kb: KnowledgeBase[_], α: Sentence): Boolean = {
@@ -21,6 +21,6 @@ object plResolution {
         case None => true
       }
     }
-    recur(sentenceToCNF(kb ∧ ¬(α)).clauses)
+    recur(sentenceToCNF(kb.asSentence ∧ ¬(α)).clauses)
   }
 }

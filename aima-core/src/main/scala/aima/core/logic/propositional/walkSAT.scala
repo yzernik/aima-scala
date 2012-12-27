@@ -1,7 +1,7 @@
 package aima.core.logic.propositional
 
-import util.Random._
-import annotation.tailrec
+import scala.util.Random._
+import scala.annotation.tailrec
 
 object walkSAT {
   def apply(clauses: Set[Clause], p: Double, maxFlips: Int): Option[Model] = {

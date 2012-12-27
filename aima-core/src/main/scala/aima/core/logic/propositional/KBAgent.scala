@@ -7,7 +7,7 @@ trait KBAgent[A, P] extends Agent[A, P] {
   val makePerceptSentence: (P, Int) => Sentence
   val makeActionQuery: Int => Sentence
   val makeActionSentence: (Option[A], Int) => Sentence
-  var t = 0
+  private var t = 0
 
   /**
    * @param percept for the agent to consider

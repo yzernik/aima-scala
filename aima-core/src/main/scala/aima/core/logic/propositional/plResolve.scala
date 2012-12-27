@@ -1,7 +1,10 @@
 package aima.core.logic.propositional
 
+import scala.annotation.tailrec
+
 object plResolve extends PLResolve {
   def apply(c1: Clause, c2: Clause): Set[Clause] = {
+    @tailrec
     def recur(c1Literals: List[Literal], result: Set[Clause]): Set[Clause] = c1Literals match {
       case (literal: PositiveLiteral) :: tail if c2.literals exists {_ == NegativeLiteral(literal.symbol)} =>
         recur(tail, result + Clause((c1.literals - literal) ++ (c2.literals - NegativeLiteral(literal.symbol))))

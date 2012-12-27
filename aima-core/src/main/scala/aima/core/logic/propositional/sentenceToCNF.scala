@@ -1,7 +1,7 @@
 package aima.core.logic.propositional
 
 import aima.core.logic.propositional.Connective._
-import aima.core.logic.propositional.grammar._
+import aima.core.logic.propositional.grammar.PropositionalLogic
 
 object sentenceToCNF extends SentenceToCNF {
   implicit def apply(sentence: Sentence): CNFSentence = {
