@@ -1,12 +1,25 @@
 package aima.core.probability
 
-case class RandomVariable[A](num: Int, domain: Domain[A]) {
-  val values = domain.values
-
-  override def equals(other: Any): Boolean = other match {
-    case that: RandomVariable[A] => (that canEqual this) && that.num == this.num
-    case _ => false
-  }
-
-  override def hashCode(): Int = num.hashCode()
+/**
+ * Artificial Intelligence A Modern Approach (3rd Edition): page 486.<br>
+ * <br>
+ * Variables in probability theory are called random variables and their names
+ * begin with an uppercase letter. Every random variable has a domain - the set
+ * of possible values it can take on.
+ *
+ * @author Alex DiCarlo
+ */
+trait RandomVariable[A] {
+  /**
+   * The number used to uniquely identify this variable.
+   */
+  val num: Int
+  /**
+   * The domain of this RandomVariable
+   */
+  val domain: Domain[A]
+  /**
+   * The set of possible values the Random Variable can take on.
+   */
+  lazy val values: Stream[A] = domain.values
 }
