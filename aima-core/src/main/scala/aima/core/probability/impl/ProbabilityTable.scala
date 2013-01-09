@@ -5,14 +5,15 @@ import aima.core.probability.impl.VariableTable._
 import aima.core.util.MixedRadixNumber
 import aima.core.util.MixedRadixNumber.mixedRadixValue
 
-private[impl] case class ProbabilityTable(values: List[Double], table: VariableTable) extends CategoricalDistribution with Factor {
+private[probability] case class ProbabilityTable(values: List[Double], table: VariableTable)
+  extends CategoricalDistribution with Factor {
   require(values.size == table.size, s"ProbabilityTable of length $values.size is not the correct size, should " +
     s"be $table.size in order to represent all possible combinations")
   private val radices = table.radices
   private val varInfos = table.varInfos
+  private lazy val sum: Double = values.sum
   val variables: List[FiniteRandomVariable[_]] = table.variables
   override lazy val size: Int = values.length
-  lazy val sum: Double = values.sum
   /**
    * Sequence of possible assignments the random variables in this table can take on with the associated probability
    */
@@ -20,15 +21,21 @@ private[impl] case class ProbabilityTable(values: List[Double], table: VariableT
     createProbabilities(values, radices, varInfos)
 
   def index(assignments: List[AssignmentProposition]): Int = table.index(assignments)
-  def normalize(): CategoricalDistribution = ProbabilityTable(values map {_ / sum}, VariableTable(variables))
+
+  def normalize(): CategoricalDistribution = ProbabilityTable(values map {_ / sum}, table)
+
   def marginal(variables: Set[FiniteRandomVariable[_]]): CategoricalDistribution = sumOutVariables(variables)
+
   def sumOut(variables: Set[FiniteRandomVariable[_]]): Factor = sumOutVariables(variables)
+
   def multiplyByPOS(
     multiplier: CategoricalDistribution,
     productVariableOrder: List[FiniteRandomVariable[_]]): CategoricalDistribution =
     product(multiplier.values, multiplier.variables, productVariableOrder)
+
   def pointwiseProductPOS(multiplier: Factor, productVariableOrder: List[FiniteRandomVariable[_]]): Factor =
     product(multiplier.values, multiplier.variables, productVariableOrder)
+
   def foreach[U](f: ((FiniteSingleWorld, Double)) => U) {
     worldProbabilities foreach {case (world, probability) => f(world, probability)}
   }
@@ -38,9 +45,7 @@ private[impl] case class ProbabilityTable(values: List[Double], table: VariableT
     val newTable = VariableTable(remainingVariables)
     val newValues = foldLeft(IndexedSeq.fill(expectedSizeOfTable(remainingVariables))(0.0)) {
       case (probabilities, (possibleWorld, probability)) =>
-        val assignment = remainingVariables map {variable =>
-          AssignmentProposition(possibleWorld(variable))
-        }
+        val assignment = remainingVariables map {variable => AssignmentProposition(possibleWorld(variable))}
         val index = newTable.index(assignment)
         probabilities.updated(index, probabilities(index) + probability)
     }

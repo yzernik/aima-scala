@@ -13,7 +13,7 @@ trait RandomVariable[A] {
   /**
    * The number used to uniquely identify this variable.
    */
-  val num: Int
+  val name: String
   /**
    * The domain of this RandomVariable
    */

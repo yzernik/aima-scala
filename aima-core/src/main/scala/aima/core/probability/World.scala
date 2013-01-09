@@ -9,7 +9,7 @@ trait World {
   type RV[A] <: RandomVariable[A]
   type Assign[A] <: Assignment[A]
   val assignments: Map[RV[_], Assign[_]]
-  require(assignments forall {case (variable, assign) => variable.num == assign.variable.num},
+  require(assignments forall {case (variable, assign) => variable.name == assign.variable.name},
     "Assignments do not have correct map! Some key != value.variable.num")
   def apply[A](variable: RV[A]): Assign[A] =
     assignments(variable.asInstanceOf[RV[_]]).asInstanceOf[Assign[A]]

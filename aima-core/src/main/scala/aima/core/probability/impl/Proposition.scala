@@ -50,5 +50,9 @@ object Proposition {
     @inline def ∧(right: Proposition): Connective.∧ = Connective.∧(left, right)
     @inline def ∨(right: Proposition): Connective.∨ = Connective.∨(left, right)
   }
+
+  implicit def variableToTermProposition(_variable: RandomVariable[_]): TermProposition = new TermProposition {
+    val variable: RandomVariable[_] = _variable
+  }
 }
 

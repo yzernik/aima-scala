@@ -12,7 +12,6 @@ import aima.core.probability.impl.Proposition.ProbabilityProposition
  * @author Alex DiCarlo
  */
 trait FiniteProbabilityModel extends ProbabilityModel {
-
   /**
    * <b>P</b>(X,...)<br>
    *
@@ -44,8 +43,8 @@ trait FiniteProbabilityModel extends ProbabilityModel {
    * <b>P</b>(X, Y) gives the values of P(X = x<sub>i</sub> | Y =
    * y<sub>j</sub>)P(Y = y<sub>j</sub>) for each possible i, j pair.
    *
-   * @param propositions the propositions for which a joint probability distribution is to be returned.
+   * @param φ the propositions for which a joint probability distribution is to be returned.
    * @return the joint distribution for <b>P</b>(X, Y, ...).
    */
-  def jointDistribution(propositions: Proposition*): CategoricalDistribution
+  def jointDistribution(φ: Proposition*): CategoricalDistribution
 }

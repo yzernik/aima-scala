@@ -20,7 +20,7 @@ trait Proposition {
   /**
    * The set of RandomVariables in the World (sample space) that this Proposition is applicable to.
    */
-  val scope: Set[RandomVariable[_]]
+  def scope: Set[RandomVariable[_]]
   /**
    * Determine whether or not the proposition holds in a particular possible world.
    *
@@ -29,6 +29,25 @@ trait Proposition {
    * @return true if the proposition holds in the given possible world, false otherwise.
    */
   def holdsIn(possibleWorld: AnyWorld): Boolean
+}
+
+/**
+ * A proposition on a single variable term.
+ *
+ * Note: The scope may be greater than a single variable as the term may be a
+ * derived variable (e.g. Total=Dice1+Dice2).
+ */
+trait TermProposition extends Proposition {
+  /**
+   * The Term's Variable.
+   */
+  def variable: RandomVariable[_]
+  lazy val scope: Set[RandomVariable[_]] = Set(variable)
+  def holdsIn(possibleWorld: AnyWorld): Boolean = possibleWorld.get(variable).isDefined
+}
+
+object TermProposition {
+  def unapply(prop: TermProposition): Option[RandomVariable[_]] = Some(prop.variable)
 }
 
 abstract class AtomicProposition(val scope: Set[RandomVariable[_]]) extends Proposition

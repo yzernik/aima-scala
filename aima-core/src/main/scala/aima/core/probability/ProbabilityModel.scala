@@ -13,6 +13,11 @@ import aima.core.probability.impl.Proposition.ProbabilityProposition
  */
 trait ProbabilityModel {
   /**
+   * a consistent ordered Set of the random variables describing the atomic variable/value pairs this probability model
+   * can take on. Refer to pg. 486 AIMA3e.
+   */
+  def variables: List[RandomVariable[_]]
+  /**
    * true, if 0 <= P(&omega;) <= 1 for every &omega; and &sum;<sub>&omega; &isin; &Omega;</sub> P(&omega;) = 1
    * (Equation 13.1 pg. 484 AIMA3e), false otherwise.
    */
@@ -28,7 +33,7 @@ trait ProbabilityModel {
    * @param φ the propositional terms for which a probability value is to be returned.
    * @return the probability of the proposition &phi;.
    */
-  def prior(φ: Proposition): Double
+  def prior(φ: Proposition*): Double
   /**
    * Unlike unconditional or prior probabilities, most of the time we have
    * some information, usually called evidence, that has already been
@@ -65,9 +70,4 @@ trait ProbabilityModel {
       case prob => prior(φ ∧ conjEvidence) / prob
     }
   }
-  /**
-   * a consistent ordered Set of the random variables describing the atomic variable/value pairs this probability model
-   * can take on. Refer to pg. 486 AIMA3e.
-   */
-  def variables: List[RandomVariable[_]]
 }

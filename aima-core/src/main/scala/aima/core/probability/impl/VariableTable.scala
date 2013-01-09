@@ -4,7 +4,7 @@ import scala.annotation.tailrec
 import aima.core.probability.impl.VariableTable._
 import aima.core.util.MixedRadixNumber.mixedRadixValue
 
-private[impl] case class VariableTable(variables: List[FiniteRandomVariable[_]]) {
+private[probability] case class VariableTable(variables: List[FiniteRandomVariable[_]]) {
   val radices: List[Int] = createRadices(variables)
   val varInfos: VarInfos = createVarInfos(variables)
   val size: Int = expectedSizeOfTable(variables)
@@ -27,7 +27,7 @@ private[impl] case class VariableTable(variables: List[FiniteRandomVariable[_]])
   }
 }
 
-object VariableTable {
+private[probability] object VariableTable {
   def expectedSizeOfTable(variables: List[FiniteRandomVariable[_]]): Int = (variables foldLeft 1)
   {case (expectedSize, FiniteRandomVariable(_, domain)) => expectedSize * domain.finiteValues.size}
 
