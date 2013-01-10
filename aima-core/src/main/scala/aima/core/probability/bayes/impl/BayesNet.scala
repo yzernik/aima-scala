@@ -9,7 +9,7 @@ final case class BayesNet(rootNodes: Node[_]*) extends BayesianNetwork {
   val variables: List[RandomVariable[_]] = _variables
   private val variableNodeMap: Map[RandomVariable[_], Node[_]] = _variableNodeMap
 
-  def node[A](variable: RandomVariable[A]): Option[Node[A]] =
+  def nodeFor[A](variable: RandomVariable[A]): Option[Node[A]] =
     (variableNodeMap get variable).asInstanceOf[Option[Node[A]]]
 
   private lazy val (_variables, _variableNodeMap): (List[RandomVariable[_]], Map[RandomVariable[_], Node[_]]) = {

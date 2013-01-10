@@ -31,7 +31,7 @@ final class FiniteBayesModel(private val network: BayesianNetwork, private val b
 
   def prior(φ: Proposition*): Double = {
     val conjProp = φ reduce {_ ∧ _}
-    val distribution = bayesInference.ask(conjProp.scope.to[List], List(), network)
+    val distribution = bayesInference(conjProp.scope.to[List], List(), network)
     (distribution foldLeft 0.0){case (sum, (world, prob)) => if (conjProp holdsIn world) sum + prob else sum}
   }
 
@@ -47,7 +47,7 @@ final class FiniteBayesModel(private val network: BayesianNetwork, private val b
 
   def jointDistribution(φ: Proposition*): CategoricalDistribution = {
     val conjProp = φ reduce {_ ∧ _}
-    val distribution = bayesInference.ask(conjProp.scope.to[List], List(), network)
+    val distribution = bayesInference(conjProp.scope.to[List], List(), network)
     jointDistrib(distribution, variables, φ: _*)
   }
 }

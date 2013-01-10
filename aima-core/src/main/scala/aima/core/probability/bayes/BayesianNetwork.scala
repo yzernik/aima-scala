@@ -45,5 +45,5 @@ trait BayesianNetwork {
    * @param variable the RandomVariable whose corresponding Node is to be retrieved.
    * @return the Node associated with the random variable in this Bayesian Network or None if it does not exist
    */
-  def node[A](variable: RandomVariable[A]): Option[Node[A]]
+  def nodeFor[A](variable: RandomVariable[A]): Option[Node[A]]
 }

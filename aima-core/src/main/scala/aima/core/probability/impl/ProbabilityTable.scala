@@ -7,6 +7,7 @@ import aima.core.util.MixedRadixNumber.mixedRadixValue
 
 private[probability] case class ProbabilityTable(values: List[Double], table: VariableTable)
   extends CategoricalDistribution with Factor {
+  import aima.core.probability.impl.ProbabilityTable._
   require(values.size == table.size, s"ProbabilityTable of length $values.size is not the correct size, should " +
     s"be $table.size in order to represent all possible combinations")
   private val radices = table.radices
@@ -107,31 +108,6 @@ private[probability] case class ProbabilityTable(values: List[Double], table: Va
     ProbabilityTable(prodValues.to[List], prodTable)
   }
 
-  private def createProbabilities(
-    values: List[Double],
-    radices: List[Int],
-    varInfos: VarInfos): IndexedSeq[(FiniteSingleWorld, Double)] = {
-    for {i <- 0 to MixedRadixNumber(0, radices).maxAllowedValue.toInt
-      mixedRadixNumber = MixedRadixNumber(i, radices)
-      possibleWorld = generateWorld(mixedRadixNumber, varInfos)
-      probability = values(mixedRadixNumber.value.toInt)
-    } yield (possibleWorld → probability)
-  }
-
-  private def createPossibleWorlds(radices: List[Int], varInfos: VarInfos): IndexedSeq[FiniteSingleWorld] = {
-    for {i <- 0 to MixedRadixNumber(0, radices).maxAllowedValue.toInt
-      mixedRadixNumber = MixedRadixNumber(i, radices)
-      possibleWorld = generateWorld(mixedRadixNumber, varInfos)
-    } yield possibleWorld
-  }
-
-  private def generateWorld(mrn: MixedRadixNumber, varInfos: VarInfos): FiniteSingleWorld = {
-    val map = varInfos.rvInfoMap.values map {rvInfo =>
-      rvInfo.variable → rvInfo.createAssignment(mrn.numeralValue(rvInfo.radixIndex).toInt)
-    }
-    FiniteSingleWorld(map.toMap)
-  }
-
   private def indexOf(variables: List[FiniteRandomVariable[_]], world: FiniteSingleWorld): Int = {
     val mrv = for {(idx, radixIdx) <- (0 until variables.length) zip (variables.length - 1 to 0)
       finiteDomain = variables(idx).domain
@@ -140,5 +116,32 @@ private[probability] case class ProbabilityTable(values: List[Double], table: Va
     } yield (radixValue, radice)
     val (radixValues, radices) = mrv.unzip
     mixedRadixValue(radixValues.toList, radices.toList).toInt
+  }
+}
+
+private[probability] object ProbabilityTable {
+  def generateWorld(mrn: MixedRadixNumber, varInfos: VarInfos): FiniteSingleWorld = {
+    val map = varInfos.rvInfoMap.values map {rvInfo =>
+      rvInfo.variable → rvInfo.createAssignment(mrn.numeralValue(rvInfo.radixIndex).toInt)
+    }
+    FiniteSingleWorld(map.toMap)
+  }
+
+  def createPossibleWorlds(radices: List[Int], varInfos: VarInfos): IndexedSeq[FiniteSingleWorld] = {
+    for {i <- 0 to MixedRadixNumber(0, radices).maxAllowedValue.toInt
+      mixedRadixNumber = MixedRadixNumber(i, radices)
+      possibleWorld = generateWorld(mixedRadixNumber, varInfos)
+    } yield possibleWorld
+  }
+
+  def createProbabilities(
+    values: List[Double],
+    radices: List[Int],
+    varInfos: VarInfos): IndexedSeq[(FiniteSingleWorld, Double)] = {
+    for {i <- 0 to MixedRadixNumber(0, radices).maxAllowedValue.toInt
+      mixedRadixNumber = MixedRadixNumber(i, radices)
+      possibleWorld = generateWorld(mixedRadixNumber, varInfos)
+      probability = values(mixedRadixNumber.value.toInt)
+    } yield (possibleWorld → probability)
   }
 }
