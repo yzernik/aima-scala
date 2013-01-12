@@ -86,4 +86,11 @@ trait Factor extends Traversable[(FiniteSingleWorld, Double)] {
    * @see Factor#pointwiseProduct(Factor)
    */
   def pointwiseProductPOS(multiplier: Factor, prodVarOrder: List[FiniteRandomVariable[_]]): Factor
+
+  /**
+   * Normalize the values comprising this factor.
+   *
+   * @return CategoricalDistribution with normalized values
+   */
+  def normalize(): CategoricalDistribution
 }
