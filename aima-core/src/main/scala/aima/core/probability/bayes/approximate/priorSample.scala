@@ -28,12 +28,12 @@ object priorSample {
   def apply(
     X: List[RandomVariable[_]],
     evidence: List[AssignmentProposition],
-    network: BayesianNetwork): Map[RandomVariable[_], AssignmentProposition] = {
+    network: BayesianNetwork): List[AssignmentProposition] = {
     val networkVariables = network.variables map {
       case x: FiniteRandomVariable[_] => x
       case _ => throw new IllegalArgumentException("priorSample only works with FiniteRandomVariables")
     }
-    (networkVariables foldLeft Map[RandomVariable[_], AssignmentProposition]()) {
+    val sample = (networkVariables foldLeft Map[RandomVariable[_], AssignmentProposition]()) {
       case (assignments, variable) =>
         (network nodeFor variable) map {node =>
           val parentAssignments = (assignments filter {case (v, assign) => node.parents.contains(v)}).values.toList
@@ -42,5 +42,6 @@ object priorSample {
           assignments + (variable -> assignment)
         } getOrElse assignments
     }
+    sample.values.to[List]
   }
 }
