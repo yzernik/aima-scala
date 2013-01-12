@@ -1,8 +1,10 @@
 package aima.core.probability.bayes
 
 import aima.core.probability.impl.{FiniteRandomVariable, AssignmentProposition}
-import aima.core.probability.{Factor, CategoricalDistribution}
+import aima.core.probability._
 import scala.annotation.tailrec
+import aima.core.probability.impl.FiniteRandomVariable
+import aima.core.probability.impl.AssignmentProposition
 
 /**
  * Artificial Intelligence A Modern Approach (3rd Edition): page 512.<br>
@@ -23,18 +25,8 @@ trait ConditionalProbabilityTable[A] extends ConditionalProbabilityDistribution[
 
   override def conditioningCaseFor(parentValues: List[AssignmentProposition]): CategoricalDistribution
 
-  override def sample(probabilityChoice: Double, parentValues: List[AssignmentProposition]): A = {
-    val distribution = conditioningCaseFor(parentValues).values
-    require(variable.domain.finiteValues.size == distribution.length, s"Size of domain of variable: " +
-      s"${variable.domain.finiteValues.size} is not equal to the size of the distribution: ${distribution.length}")
-    @tailrec
-    def recur(distribution: List[Double], total: Double, index: Int): Int = distribution match {
-      case value :: tail if probabilityChoice > total => recur(tail, total + value, index + 1)
-      case _ => index
-    }
-    val index = recur(distribution, 0.0, 0)
-    variable.domain.indexedValues(index)
-  }
+  override def sample(probabilityChoice: Double, parentValues: List[AssignmentProposition]): A =
+    bayes.sample(variable, probabilityChoice, parentValues, conditioningCaseFor(parentValues).values)
 
   /**
    * Construct a Factor consisting of the Random Variables from the

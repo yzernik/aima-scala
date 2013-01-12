@@ -1,6 +1,7 @@
 package aima.core.probability.bayes
 
 import aima.core.probability.RandomVariable
+import aima.core.probability.impl.FiniteRandomVariable
 
 /**
  * Artificial Intelligence A Modern Approach (3rd Edition): page 511.<br>
@@ -66,6 +67,11 @@ trait ContinuousNode[A] extends Node[A]
  * A node over a Random Variable that has a finite countable domain.
  */
 trait FiniteNode[A] extends DiscreteNode[A] {
+  /**
+   * The RandomVariable this Node is for/on.
+   */
+  override def variable: FiniteRandomVariable[A]
+
   /**
    * The Conditional Probability Table detailing the finite set of probabilities for this Node.
    */
