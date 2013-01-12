@@ -5,6 +5,32 @@ import aima.core.probability.bayes._
 import aima.core.probability.impl.{FiniteRandomVariable, AssignmentProposition}
 import scala.Some
 
+/**
+ * Artificial Intelligence A Modern Approach (3rd Edition): Figure 14.11, page
+ * 528.<br>
+ * <br>
+ *
+ * <pre>
+ * function ELIMINATION-ASK(X, e, bn) returns a distribution over X
+ *   inputs: X, the query variable
+ *           e, observed values for variables E
+ *           bn, a Bayesian network specifying joint distribution P(X<sub>1</sub>, ..., X<sub>n</sub>)
+ *
+ *   factors <- []
+ *   for each var in ORDER(bn.VARS) do
+ *       factors <- [MAKE-FACTOR(var, e) | factors]
+ *       if var is hidden variable the factors <- SUM-OUT(var, factors)
+ *   return NORMALIZE(POINTWISE-PRODUCT(factors))
+ * </pre>
+ *
+ * Figure 14.11 The variable elimination algorithm for inference in Bayesian
+ * networks. <br>
+ * <br>
+ * <b>Note:</b> The implementation has been extended to handle queries with
+ * multiple variables. <br>
+ *
+ * @author Alex DiCarlo
+ */
 object eliminationAsk extends BayesianInference {
   def apply(
     X: List[RandomVariable[_]],
