@@ -25,15 +25,14 @@ package aima.core.search
  * Author: Alex DiCarlo (dicarlo2)
  * Date: 11/21/12
  */
-sealed abstract class SearchResult[+A] {
-  self =>
+sealed abstract class SearchResult[+A] {self =>
 
   /**
    * Returns true if the search result is a failure or a cutoff, true otherwise
    */
   def isEmpty: Boolean
 
-  /** 
+  /**
    * Returns true if the search result is an instance of $solution, false otherwise.
    */
   def isDefined: Boolean = !isEmpty
@@ -47,7 +46,7 @@ sealed abstract class SearchResult[+A] {
   /** Returns false if the search result is $none, true otherwise.
     * @note   Implemented here to avoid the implicit conversion to Iterable.
     */
-  final def nonEmpty = isDefined
+  final def nonEmpty: Boolean = isDefined
 
   /** Returns true if this search result is nonempty '''and''' the predicate
     * $p returns true when applied to this $search result's value.
@@ -85,17 +84,14 @@ sealed abstract class SearchResult[+A] {
   /** Returns a singleton iterator returning the $search result's value
     * if it is nonempty, or an empty iterator if the search result is empty.
     */
-  def iterator: Iterator[A] =
-    if (isEmpty) collection.Iterator.empty else collection.Iterator.single(this.get)
+  def iterator: Iterator[A] = if (isEmpty) collection.Iterator.empty else collection.Iterator.single(this.get)
 
   /** Returns a singleton list containing the $search result's value
     * if it is nonempty, or the empty list if the $search result is empty.
     */
-  def toList: List[A] =
-    if (isEmpty) List() else new ::(this.get, Nil)
+  def toList: List[A] = if (isEmpty) List() else new ::(this.get, Nil)
 
-  def toOption: Option[A] =
-    if (isEmpty) None else Some(this.get)
+  def toOption: Option[A] = if (isEmpty) None else Some(this.get)
 
   /** Returns a [[scala.util.Left]] containing the given
     * argument `left` if this $search result is empty, or
@@ -105,8 +101,7 @@ sealed abstract class SearchResult[+A] {
     * @param left the expression to evaluate and return if this is empty
     * @see toLeft
     */
-  @inline final def toRight[X](left: => X) =
-    if (isEmpty) Left(left) else Right(this.get)
+  @inline final def toRight[X](left: => X): Either[X, A] = if (isEmpty) Left(left) else Right(this.get)
 
   /** Returns a [[scala.util.Right]] containing the given
     * argument `right` if this is empty, or
@@ -116,18 +111,17 @@ sealed abstract class SearchResult[+A] {
     * @param right the expression to evaluate and return if this is empty
     * @see toRight
     */
-  @inline final def toLeft[X](right: => X) =
-    if (isEmpty) Right(right) else Left(this.get)
+  @inline final def toLeft[X](right: => X): Either[A, X] = if (isEmpty) Right(right) else Left(this.get)
 }
 
-case class Success[+A](result: A) extends SearchResult[A]{
-  def isEmpty = false
-  def get = result
+case class Success[+A](result: A) extends SearchResult[A] {
+  def isEmpty: Boolean = false
+  def get: A = result
 }
 
 sealed abstract class EmptySearchResult extends SearchResult[Nothing] {
-  def isEmpty = true
-  def get = throw new NoSuchElementException("None.get")
+  def isEmpty: Boolean = true
+  def get: Nothing = throw new NoSuchElementException("None.get")
 }
 case object Failure extends EmptySearchResult
 case object Cutoff extends EmptySearchResult

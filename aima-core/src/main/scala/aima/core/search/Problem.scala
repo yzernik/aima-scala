@@ -37,6 +37,8 @@ package aima.core.search
  * reach state s' is denoted by c(s,a,s')</li>
  * </ul>
  *
+ * Note: See package object for definition of constructor types
+ *
  * Author: dicarlo2 (Alex)
  * Date: 11/19/12
  */
