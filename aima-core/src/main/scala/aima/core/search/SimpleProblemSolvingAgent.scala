@@ -72,7 +72,7 @@ final class SimpleProblemSolvingAgent[S, A, P](
       }
     }
     val action = actions.headOption
-    actions = actions.tail
+    if (action.isDefined) actions = actions.tail
     action
   }
 }
