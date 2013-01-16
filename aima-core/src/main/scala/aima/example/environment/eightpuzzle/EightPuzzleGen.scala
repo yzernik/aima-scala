@@ -38,4 +38,6 @@ trait EightPuzzleGen {
   val moves: Gen[MoveGap with Product] = for {
     move <- Gen.oneOf(Seq(Left, Right, Up, Down))
   } yield move
+
+  val completeBoard = IndexedSeq(IndexedSeq(0, 1, 2), IndexedSeq(3, 4, 5), IndexedSeq(6, 7, 8))
 }

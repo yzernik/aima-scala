@@ -166,9 +166,9 @@ class EightPuzzleStateTest extends FeatureSpec with
           val newPuzzle = eightPuzzle moveGap Left
           val (oldGapX, oldGapY) = eightPuzzle indexOf 0
           val (newGapX, newGapY) = newPuzzle indexOf 0
-          eightPuzzle(newGapX)(newGapY) should equal (newPuzzle(oldGapX)(oldGapY))
-          newGapX should be (oldGapX - 1)
-          newGapY should be (oldGapY)
+          eightPuzzle(newGapX)(newGapY) should equal(newPuzzle(oldGapX)(oldGapY))
+          newGapX should be(oldGapX - 1)
+          newGapY should be(oldGapY)
         }
       }
     }
@@ -182,9 +182,9 @@ class EightPuzzleStateTest extends FeatureSpec with
           val newPuzzle = eightPuzzle moveGap Right
           val (oldGapX, oldGapY) = eightPuzzle indexOf 0
           val (newGapX, newGapY) = newPuzzle indexOf 0
-          eightPuzzle(newGapX)(newGapY) should equal (newPuzzle(oldGapX)(oldGapY))
-          newGapX should be (oldGapX + 1)
-          newGapY should be (oldGapY)
+          eightPuzzle(newGapX)(newGapY) should equal(newPuzzle(oldGapX)(oldGapY))
+          newGapX should be(oldGapX + 1)
+          newGapY should be(oldGapY)
         }
       }
     }
@@ -198,9 +198,9 @@ class EightPuzzleStateTest extends FeatureSpec with
           val newPuzzle = eightPuzzle moveGap Up
           val (oldGapX, oldGapY) = eightPuzzle indexOf 0
           val (newGapX, newGapY) = newPuzzle indexOf 0
-          eightPuzzle(newGapX)(newGapY) should equal (newPuzzle(oldGapX)(oldGapY))
-          newGapX should be (oldGapX)
-          newGapY should be (oldGapY - 1)
+          eightPuzzle(newGapX)(newGapY) should equal(newPuzzle(oldGapX)(oldGapY))
+          newGapX should be(oldGapX)
+          newGapY should be(oldGapY - 1)
         }
       }
     }
@@ -214,9 +214,9 @@ class EightPuzzleStateTest extends FeatureSpec with
           val newPuzzle = eightPuzzle moveGap Down
           val (oldGapX, oldGapY) = eightPuzzle indexOf 0
           val (newGapX, newGapY) = newPuzzle indexOf 0
-          eightPuzzle(newGapX)(newGapY) should equal (newPuzzle(oldGapX)(oldGapY))
-          newGapX should be (oldGapX)
-          newGapY should be (oldGapY + 1)
+          eightPuzzle(newGapX)(newGapY) should equal(newPuzzle(oldGapX)(oldGapY))
+          newGapX should be(oldGapX)
+          newGapY should be(oldGapY + 1)
         }
       }
     }
@@ -236,12 +236,11 @@ class EightPuzzleStateTest extends FeatureSpec with
   }
 
   feature("Complete Board") {
-    val completeBoard = IndexedSeq(IndexedSeq(0, 1, 2), IndexedSeq(3, 4, 5), IndexedSeq(6, 7, 8))
     scenario("Complete eight puzzle board") {
       Given("A complete EightPuzzleState")
       val puzzle = EightPuzzleState(completeBoard)
       Then("EightPuzzleState#completed is true")
-      puzzle.complete should be (true)
+      puzzle.complete should be(true)
     }
 
     scenario("Incomplete eight puzzle board") {
@@ -249,7 +248,7 @@ class EightPuzzleStateTest extends FeatureSpec with
       Then("EightPuzzleState#completed is false")
       forAll(eightPuzzles) {eightPuzzle =>
         whenever(eightPuzzle.board != completeBoard) {
-          eightPuzzle.complete should be (false)
+          eightPuzzle.complete should be(false)
         }
       }
     }

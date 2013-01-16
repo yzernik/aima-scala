@@ -50,6 +50,5 @@ import scala.collection.immutable
  * Date: 11/21/12
  */
 object breadthFirstSearch {
-  def apply[S, A](search: FrontierSearch[S, A]): Search[S, A, Seq[A]] =
-    search(immutable.Queue[Node[S, A]]())
+  def apply[S, A](search: FrontierSearch[S, A]): Search[S, A, Seq[A]] = search(immutable.Queue[Node[S, A]]())
 }
