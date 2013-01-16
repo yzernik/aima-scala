@@ -1,6 +1,6 @@
 package aima.core.probability.bayes
 
-import aima.core.probability.impl.{AssignmentProposition}
+import aima.core.probability.impl.{SingleAssignment, AssignmentProposition}
 
 package object approximate {
   type Event = List[AssignmentProposition]
@@ -9,7 +9,7 @@ package object approximate {
     node.cpd.sample(util.Random.nextDouble(), event)
 
   private[approximate] def eventValuesForParents(node: Node[_], event: Event): Event =
-    (event filter {case (v, assign) => node.parents.contains(v)})
+    (event filter {case AssignmentProposition(SingleAssignment(v, _)) => node.parents.contains(v)})
 
   /**
    * Get a random sample from <b>P</b>(X<sub>i</sub> | mb(X<sub>i</sub>)),

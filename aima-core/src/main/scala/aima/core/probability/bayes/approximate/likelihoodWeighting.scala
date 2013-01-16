@@ -25,7 +25,9 @@ object likelihoodWeighting extends BayesianSampleInference {
           } getOrElse (assignments, weight)
         case ((assignments, weight), variable) =>
           (network nodeFor variable) map {node =>
-            val parentAssignments = (assignments filter {case (v, assign) => node.parents.contains(v)})
+            val parentAssignments = assignments filter {
+              case AssignmentProposition(SingleAssignment(v, _)) => node.parents.contains( v)
+            }
             val sample = node.cpd.sample(util.Random.nextDouble(), parentAssignments)
             (AssignmentProposition(SingleAssignment(variable, sample)) :: assignments, weight)
           } getOrElse (assignments, weight)

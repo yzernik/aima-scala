@@ -38,7 +38,7 @@ object rejectionSampling extends BayesianSampleInference {
     network: BayesianNetwork,
     sampleCnt: Int): CategoricalDistribution = {
     def isConsistent(x: List[AssignmentProposition]): Boolean =
-      evidence forall {assignment => assignment == (x find (_ == assignment.assign.variable) getOrElse assignment)}
+      evidence forall {assignment => assignment == (x find (_ == assignment) getOrElse assignment)}
 
     val variables = X map {
       case x: FiniteRandomVariable[_] => x

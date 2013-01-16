@@ -12,7 +12,8 @@ object gibbsAsk extends BayesianSampleInference {
     network: BayesianNetwork,
     samples: Int): CategoricalDistribution = {
     val nonEvidenceVars = network.variables filter {variable => evidence exists {_.assign.variable == variable}}
-    val evidenceMap = (evidence map {assign => (assign.assign.variable → assign)}).toMap
+    val evidenceMap =
+      (evidence map {assign => (assign.assign.variable → assign)}).toMap[RandomVariable[_], AssignmentProposition]
     val initialState = (nonEvidenceVars foldLeft evidenceMap) {case (event, variable) =>
       val sample = (network nodeFor variable).map(node => randomSample(node, event.values.to[List])).get
       event + (variable → AssignmentProposition(SingleAssignment(variable, sample)))
