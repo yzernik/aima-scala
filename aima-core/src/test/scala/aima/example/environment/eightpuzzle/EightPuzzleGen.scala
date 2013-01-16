@@ -18,8 +18,10 @@
 package aima.example.environment.eightpuzzle
 
 import org.scalacheck.Gen
+import org.scalatest.matchers.ShouldMatchers
+import aima.core.search.{SearchResult, Problem, Success}
 
-trait EightPuzzleGen {
+trait EightPuzzleGen extends ShouldMatchers {
   private def generateSeq(): Seq[Int] = util.Random.shuffle((0 to 8).to[Seq])
   private def generateBoard(seq: Seq[Int]): IndexedSeq[IndexedSeq[Int]] = seq.to[IndexedSeq].grouped(3).to[IndexedSeq]
 
@@ -40,4 +42,15 @@ trait EightPuzzleGen {
   } yield move
 
   val completeBoard = IndexedSeq(IndexedSeq(0, 1, 2), IndexedSeq(3, 4, 5), IndexedSeq(6, 7, 8))
+  
+  def checkSolution(puzzle: Problem[EightPuzzleState, MoveGap], actionsResult: SearchResult[Seq[MoveGap]]) {
+    actionsResult should be ('defined)
+    actionsResult match {
+      case Success(actions) =>
+        val result = (actions foldLeft puzzle.initialState) {case (state, action) =>
+          state moveGap action
+        }
+        result should equal (completeBoard)
+    }
+  }
 }
