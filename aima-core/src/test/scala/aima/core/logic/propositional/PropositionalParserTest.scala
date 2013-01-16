@@ -150,7 +150,7 @@ class PropositionalParserTest
   }
 
   feature("Parser passes ScalaCheck") {
-    scenario("ScalaCheck's randomly generated complex sentences of up to 2^10 symbols that are up to 6 characters "
+    scenario("ScalaCheck's randomly generated complex sentences of up to 2^5 symbols that are up to 6 characters "
       + "from [A-Z][a-z0-9A-Z]* are parsed correctly") {
       val genSymbol = for {
         a <- alphaUpperChar
@@ -171,7 +171,7 @@ class PropositionalParserTest
       } yield complex
 
       def genSentence(size: Int): Gen[Sentence] =
-        if (size < 10) frequency((3, genComplex(size)), (1, genAtomic)) else genAtomic
+        if (size < 5) frequency((3, genComplex(size)), (1, genAtomic)) else genAtomic
 
       forAll(genSentence(0)) {sentence =>
         val string = sentence.toString

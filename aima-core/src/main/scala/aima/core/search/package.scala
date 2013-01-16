@@ -83,5 +83,5 @@ package object search {
   type Heuristic[S] = S => Double
 
   def solutionActions[S, A](node: Node[S, A]): Seq[A] =
-    node.pathToRoot withFilter { _.action.isEmpty } map { _.action.get }
+    node.pathToRoot withFilter { _.action.isDefined } map { _.action.get }
 }

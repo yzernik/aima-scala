@@ -33,6 +33,6 @@ object search {
         case Some(node) if problem.goalTest(node.state) => Success(solutionActions(node))
         case Some(node) => recur(frontierExpander(problem, node, frontier))
       }
-      recur(frontier.take(0) ++ Traversable(Node[S, A](problem.initialState, None, None, 0)))
+      recur(frontier ++ Traversable(Node[S, A](problem.initialState, None, None, 0)))
     }
 }

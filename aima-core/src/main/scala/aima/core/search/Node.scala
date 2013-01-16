@@ -51,6 +51,8 @@ class Node[S, A](val state: S, val parent: Option[Node[S, A]], val action: Optio
   def canEqual(other: Any): Boolean = other.isInstanceOf[Node[S, A]]
 
   override def hashCode(): Int = state.hashCode()
+
+  override def toString: String = s"Node($state, $parent, $action, $pathCost)"
 }
 
 object Node {
