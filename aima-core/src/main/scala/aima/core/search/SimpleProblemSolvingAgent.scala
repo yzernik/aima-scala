@@ -50,11 +50,11 @@ import aima.core.framework.Agent
  * Date: 11/19/12
  */
 final class SimpleProblemSolvingAgent[S, A, P](
-  initialState: S,
-  updateState: UpdateState[S, P],
-  formulateGoal: FormulateGoal[S],
-  formulateProblem: FormulateProblem[S, A],
-  search: Search[S, A, Seq[A]]) extends Agent[A, P] {
+    initialState: S,
+    updateState: UpdateState[S, P],
+    formulateGoal: FormulateGoal[S],
+    formulateProblem: FormulateProblem[S, A],
+    search: Search[S, A, Seq[A]]) extends Agent[A, P] {
   private var actions = Seq[A]()
   private var state = initialState
 
