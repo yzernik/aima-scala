@@ -81,7 +81,7 @@ object recursiveBestFirstSearch {
       if (problem.goalTest(node.state))
         (Success(solutionActions(node)), 0)
       else
-        problem.actions(node.state) map { a => createRBFSChildNode(problem, node, a) } sortWith
+        problem.actionsFor(node.state) map { a => createRBFSChildNode(problem, node, a) } sortWith
           { (x, y) => x.f.compare(y.f) < 0 } match {
           case Nil => (Failure, 0)
           case successors => recur(successors)

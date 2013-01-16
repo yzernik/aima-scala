@@ -37,11 +37,10 @@ import scala.annotation.tailrec
  * solution is found or if the depth- limited search returns failure, meaning
  * that no solution exists.
  *
- * <b>Note:</b> Supports both Tree and Graph based versions by using TreeFrontierExpander.nodeExpander() or
- * GraphFrontierExpander.nodeExpander() as an argument, respectively
+ * <b>Note:</b> Supports both Tree and Graph based versions by using TreeFrontierExpander() or
+ * GraphNodeExpander() as an argument, respectively
  *
- * Author: Alex DiCarlo (dicarlo2)
- * Date: 11/21/12
+ * @author Alex DiCarlo
  */
 object iterativeDeepeningSearch {
   def apply[S, A](nodeExpander: NodeExpander[S, A])(limit: Int): Search[S, A, Seq[A]] = problem => {

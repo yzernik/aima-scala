@@ -36,10 +36,8 @@ package aima.core.search
  *
  * Figure 3.7 An informal description of the general graph-search algorithm.
  *
- * Author: dicarlo2 (Alex)
- * Date: 11/19/12
+ * @author Alex DiCarlo
  */
 object graphSearch {
-  def apply[S, A](frontier: Frontier[S, A]): Search[S, A, Seq[A]] =
-    search(frontier, GraphFrontierExpander())
+  def apply[S, A](frontier: Frontier[S, A]): Search[S, A, Seq[A]] = search(frontier, GraphNodeExpander())
 }

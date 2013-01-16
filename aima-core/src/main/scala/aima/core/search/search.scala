@@ -21,18 +21,20 @@ import scala.annotation.tailrec
 import scala.Some
 
 /**
- * Author: Alex DiCarlo (dicarlo2)
- * Date: 11/21/12
+ * @author Alex DiCarlo
  */
 object search {
-  def apply[S, A](frontier: Frontier[S, A], frontierExpander: FrontierExpander[S, A]): Search[S, A, Seq[A]] =
+  def apply[S, A](frontier: Frontier[S, A], nodeExpander: NodeExpander[S, A]): Search[S, A, Seq[A]] =
     problem => {
       @tailrec
-      def recur(frontier: Frontier[S, A]): SearchResult[Seq[A]] = frontier.headOption match {
-        case None => Failure
-        case Some(node) if problem.goalTest(node.state) => Success(solutionActions(node))
-        case Some(node) => recur(frontierExpander(problem, node, frontier))
-      }
-      recur(frontier ++ Traversable(Node[S, A](problem.initialState, None, None, 0)))
+      def recur(frontier: Frontier[S, A], nodeExpander: NodeExpander[S, A]): SearchResult[Seq[A]] =
+        frontier.headOption match {
+          case Some(node) if problem.goalTest(node.state) => Success(solutionActions(node))
+          case Some(node) =>
+            val (children, newNodeExpander) = nodeExpander(problem, node)
+            recur((frontier filterNot {_ == node}) ++ children, newNodeExpander)
+          case None => Failure
+        }
+      recur(frontier ++ Traversable(Node[S, A](problem.initialState, None, None, 0)), nodeExpander)
     }
 }

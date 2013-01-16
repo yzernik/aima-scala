@@ -17,11 +17,8 @@
 
 package aima.core
 
-import aima.core.agent._
-
 /**
- * Author: dicarlo2 (Alex)
- * Date: 11/19/12
+ * @author Alex DiCarlo
  */
 package object search {
   /**
@@ -66,8 +63,6 @@ package object search {
    */
   type StepCost[S, A] = (S, A, S) => Double
   type Frontier[S, A] = Traversable[Node[S, A]]
-  type NodeExpander[S, A] = (Problem[S, A], Node[S, A]) => Seq[Node[S, A]]
-  type FrontierExpander[S, A] = (Problem[S, A], Node[S, A], Frontier[S, A]) => Frontier[S, A]
   type FrontierSearch[S, A] = Frontier[S, A] => Search[S, A, Seq[A]]
   type Explored[S, A] = Set[Node[S, A]]
   /**

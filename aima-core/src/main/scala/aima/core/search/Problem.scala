@@ -44,7 +44,7 @@ package aima.core.search
  */
 case class Problem[S, A](
   initialState: S,
-  actions: Actions[S, A],
+  actionsFor: Actions[S, A],
   result: Result[S, A],
   goalTest: GoalTest[S],
   stepCost: StepCost[S, A])

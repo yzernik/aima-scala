@@ -17,16 +17,9 @@
 
 package aima.core.search
 
-import aima.core.search.Node.createChildNode
-
 /**
- * Author: Alex DiCarlo (dicarlo2)
- * Date: 11/21/12
+ * @author Alex DiCarlo
  */
-object TreeFrontierExpander {
-  def apply[S, A](): FrontierExpander[S, A] =
-    (problem, node, frontier) => (frontier filterNot {_ == node}) ++ nodeExpander()(problem, node)
-
-  def nodeExpander[S, A](): NodeExpander[S, A] =
-    (problem, node) => problem.actions(node.state) map {createChildNode(problem, node, _)}
+trait NodeExpander[S, A] {
+  def apply(problem: Problem[S, A], node: Node[S, A]): (Seq[Node[S, A]], NodeExpander[S, A])
 }

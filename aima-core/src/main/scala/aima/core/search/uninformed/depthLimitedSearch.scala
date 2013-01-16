@@ -43,23 +43,22 @@ import aima.core.search._
  *
  * Figure 3.17 A recursive implementation of depth-limited search.
  *
- * <b>Note:</b> Supports both Tree and Graph based versions by using TreeFrontierExpander.nodeExpander() or
- * GraphFrontierExpander.nodeExpander() as an argument, respectively
+ * <b>Note:</b> Supports both Tree and Graph based versions by using TreeFrontierExpander() or
+ * GraphNodeExpander() as an argument, respectively
  *
- * Author: Alex DiCarlo (dicarlo2)
- * Date: 11/20/12
+ * @author Alex DiCarlo
  */
 object depthLimitedSearch {
   def apply[S, A](nodeExpander: NodeExpander[S, A])(limit: Int): Search[S, A, Seq[A]] = problem => {
-    def recursiveDLS(node: Node[S, A], limit: Int): SearchResult[Seq[A]] = {
+    def recursiveDLS(nodeExpander: NodeExpander[S, A], node: Node[S, A], limit: Int): SearchResult[Seq[A]] = {
       if (problem.goalTest(node.state))
         Success(solutionActions(node))
       else if (limit == 0)
         Cutoff
       else {
-        val children = nodeExpander(problem, node)
+        val (children, newNodeExpander) = nodeExpander(problem, node)
         children.foldRight[SearchResult[Seq[A]]](Failure) { (child, result) =>
-          recursiveDLS(child, limit - 1) match {
+          recursiveDLS(newNodeExpander, child, limit - 1) match {
             case success@Success(_) => return success
             case Cutoff => Cutoff
             case Failure => result
@@ -67,6 +66,6 @@ object depthLimitedSearch {
         }
       }
     }
-    recursiveDLS(Node[S, A](problem.initialState, None, None, 0), limit)
+    recursiveDLS(nodeExpander, Node[S, A](problem.initialState, None, None, 0), limit)
   }
 }

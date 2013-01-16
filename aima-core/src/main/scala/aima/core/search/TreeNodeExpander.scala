@@ -17,24 +17,16 @@
 
 package aima.core.search
 
+import aima.core.search.Node.createChildNode
+
 /**
- * Artificial Intelligence A Modern Approach (3rd Edition): Figure 3.7, page 77.<br>
- * <br>
- *
- * <pre>
- * function TREE-SEARCH(problem) returns a solution, or failure
- *   initialize the frontier using the initial state of the problem
- *   loop do
- *     if the frontier is empty then return failure
- *     choose a leaf node and remove it from the frontier
- *     if the node contains a goal state then return the corresponding solution
- *     expand the chosen node, adding the resulting nodes to the frontier
- * </pre>
- *
- * Figure 3.7 An informal description of the general tree-search algorithm.
- *
  * @author Alex DiCarlo
  */
-object treeSearch {
-  def apply[S, A](frontier: Frontier[S, A]): Search[S, A, Seq[A]] = search(frontier, TreeNodeExpander())
+final class TreeNodeExpander[S, A] private() extends NodeExpander[S, A] {
+  def apply(problem: Problem[S, A], node: Node[S, A]): (Seq[Node[S, A]], NodeExpander[S, A]) =
+    (problem actionsFor node.state map {createChildNode(problem, node, _)}, this)
+}
+
+object TreeNodeExpander {
+  def apply[S, A](): TreeNodeExpander[S, A] = new TreeNodeExpander
 }

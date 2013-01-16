@@ -33,8 +33,7 @@ import scala.util.control.TailCalls._
  * not fully reversible (i.e. unidirectional links on a graph), and could
  * instead intersect at the explored set.
  *
- * Author: Alex DiCarlo (dicarlo2)
- * Date: 11/21/12
+ * @author Alex DiCarlo
  */
 object bidirectionalSearch {
   /**
@@ -54,7 +53,7 @@ object bidirectionalSearch {
     val reverseProblem = problem.reverseProblem
 
     def expandFrontier(problem: Problem[S, A], node: Node[S, A], frontier: Frontier[S, A], explored: Explored[S, A]) = {
-      val children = problem.actions(node.state) map { a => createChildNode(problem, node, a) }
+      val children = problem.actionsFor(node.state) map { a => createChildNode(problem, node, a) }
       children.foldRight(frontier.tail) {
         case (child, f) if f.exists(_ == child) || explored.exists(_ == child) || node == child => f
         case (child, f) => f ++ Traversable(child)
@@ -66,7 +65,7 @@ object bidirectionalSearch {
         oNode.map(solutionActions(_)).getOrElse(Seq())
       val possiblePath = getActions(opNode) ++ getActions(rpNode).reverse
       possiblePath.foldLeft(originalProblem.initialState) { (currState, action) =>
-        if (originalProblem.actions(currState).exists(_ == action))
+        if (originalProblem.actionsFor(currState).exists(_ == action))
           originalProblem.result(currState, action)
         else
           return None
