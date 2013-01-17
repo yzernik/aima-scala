@@ -22,9 +22,6 @@ import org.scalatest.matchers.ShouldMatchers
 import aima.core.search.{SearchResult, Problem, Success}
 
 trait EightPuzzleGen extends ShouldMatchers {
-  private def generateSeq(): Seq[Int] = util.Random.shuffle((0 to 8).to[Seq])
-  private def generateBoard(seq: Seq[Int]): IndexedSeq[IndexedSeq[Int]] = seq.to[IndexedSeq].grouped(3).to[IndexedSeq]
-
   val boards: Gen[IndexedSeq[IndexedSeq[Int]]] = for {
     randomList <- Gen.resultOf((any: Int) => generateSeq())
   } yield generateBoard(randomList)
@@ -42,15 +39,30 @@ trait EightPuzzleGen extends ShouldMatchers {
   } yield move
 
   val completeBoard = IndexedSeq(IndexedSeq(0, 1, 2), IndexedSeq(3, 4, 5), IndexedSeq(6, 7, 8))
-  
+
   def checkSolution(puzzle: Problem[EightPuzzleState, MoveGap], actionsResult: SearchResult[Seq[MoveGap]]) {
-    actionsResult should be ('defined)
+    actionsResult should be('defined)
     actionsResult match {
       case Success(actions) =>
         val result = (actions foldLeft puzzle.initialState) {case (state, action) =>
           state moveGap action
         }
-        result should equal (completeBoard)
+        result should equal(completeBoard)
     }
   }
+
+  private def generateSeq(): Seq[Int] = {
+    def recur(seq: Seq[Int]): Seq[Int] = if (evenInversions(seq)) seq else recur(util.Random.shuffle((0 to 8).to[Seq]))
+    recur(util.Random.shuffle((0 to 8).to[Seq]))
+  }
+
+  private def evenInversions(seq: Seq[Int]): Boolean = {
+    def recur(seq: Seq[Int], inversions: Int): Int = seq match {
+      case Seq(x, xs@_*) => recur(xs, inversions + (xs count {tile => tile != 0 && tile < x}))
+      case Seq() => inversions
+    }
+    recur(seq, 0) % 2 == 0
+  }
+
+  private def generateBoard(seq: Seq[Int]): IndexedSeq[IndexedSeq[Int]] = seq.to[IndexedSeq].grouped(3).to[IndexedSeq]
 }

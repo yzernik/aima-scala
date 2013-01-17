@@ -21,38 +21,30 @@ import org.scalatest.{GivenWhenThen, FeatureSpec}
 import org.scalatest.matchers.ShouldMatchers
 import org.scalatest.prop.GeneratorDrivenPropertyChecks
 import aima.example.environment.eightpuzzle.{MoveGap, EightPuzzle, EightPuzzleGen, EightPuzzleState}
-import aima.core.search.{treeSearch, Success, graphSearch}
-import org.scalatest.concurrent.Timeouts
-import org.scalatest.time.{Seconds, Span}
+import aima.core.search.{treeSearch, graphSearch}
 
 class breadthFirstSearchTest extends FeatureSpec with
                                      GivenWhenThen with
                                      ShouldMatchers with
                                      GeneratorDrivenPropertyChecks with
-                                     EightPuzzleGen with Timeouts {
+                                     EightPuzzleGen {
   feature("BFS can solve a graph search problem") {
     scenario("Eight puzzle graph search") {
       Given("an eight puzzle problem")
       val puzzle = EightPuzzle(IndexedSeq(IndexedSeq(4, 0, 2), IndexedSeq(1, 3, 7), IndexedSeq(6, 8, 5)))
-      When("#breadthFirstSearch is called")
-
-      failAfter(Span(1, Seconds)) {
+      When("#breadthFirstSearch is called with graphSearch")
       val resultActions = breadthFirstSearch[EightPuzzleState, MoveGap](graphSearch.apply)(puzzle)
-        checkSolution(puzzle, resultActions)
-      }
       Then("a solution is returned")
+      checkSolution(puzzle, resultActions)
     }
 
     scenario("Eight puzzle tree search") {
       Given("an eight puzzle problem")
       val puzzle = EightPuzzle(IndexedSeq(IndexedSeq(3, 4, 1), IndexedSeq(7, 6, 2), IndexedSeq(0, 8, 5)))
-      When("#breadthFirstSearch is called")
-      failAfter(Span(1, Seconds)) {
-        val resultActions = breadthFirstSearch[EightPuzzleState, MoveGap](treeSearch.apply)(puzzle)
-        checkSolution(puzzle, resultActions)
-      }
-
+      When("#breadthFirstSearch is called with treeSearch")
+      val resultActions = breadthFirstSearch[EightPuzzleState, MoveGap](treeSearch.apply)(puzzle)
       Then("a solution is returned")
+      checkSolution(puzzle, resultActions)
     }
   }
 }
