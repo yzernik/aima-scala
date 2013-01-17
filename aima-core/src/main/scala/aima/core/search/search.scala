@@ -32,7 +32,7 @@ object search {
           case Some(node) if problem.goalTest(node.state) => Success(solutionActions(node))
           case Some(node) =>
             val (children, newNodeExpander) = nodeExpander(problem, node)
-            recur((frontier filterNot {_ == node}) ++ children, newNodeExpander)
+            recur(frontier.tail ++ children, newNodeExpander)
           case None => Failure
         }
       recur(frontier ++ Traversable(Node[S, A](problem.initialState, None, None, 0)), nodeExpander)
