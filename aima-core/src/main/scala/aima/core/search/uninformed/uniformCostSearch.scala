@@ -57,6 +57,5 @@ import aima.core.search.informed.bestFirstSearch
  * Date: 11/21/12
  */
 object uniformCostSearch {
-  def apply[S, A](search: FrontierSearch[S, A]): Search[S, A, Seq[A]] =
-    bestFirstSearch(search)(Ordering.by(_.pathCost))
+  def apply[S, A](search: FrontierSearch[S, A]): Search[S, A, Seq[A]] = bestFirstSearch(search)(Ordering.by(_.pathCost))
 }

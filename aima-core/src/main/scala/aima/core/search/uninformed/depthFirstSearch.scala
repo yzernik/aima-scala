@@ -18,7 +18,6 @@
 package aima.core.search.uninformed
 
 import aima.core.search._
-import scala.collection.immutable
 
 /**
  * Artificial Intelligence A Modern Approach (3rd Edition): page 85.<br>
@@ -33,6 +32,5 @@ import scala.collection.immutable
  * Date: 11/21/12
  */
 object depthFirstSearch {
-  def apply[S, A](search: FrontierSearch[S, A]): Search[S, A, Seq[A]] =
-    search(immutable.Stack[Node[S, A]]())
+  def apply[S, A](search: FrontierSearch[S, A]): Search[S, A, Seq[A]] = search(StackFrontier())
 }

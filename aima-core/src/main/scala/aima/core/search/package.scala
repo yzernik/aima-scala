@@ -62,7 +62,6 @@ package object search {
    * denoted by c(s, a, s').
    */
   type StepCost[S, A] = (S, A, S) => Double
-  type Frontier[S, A] = Traversable[Node[S, A]]
   type FrontierSearch[S, A] = Frontier[S, A] => Search[S, A, Seq[A]]
   type Explored[S, A] = Set[Node[S, A]]
   /**

@@ -28,13 +28,13 @@ object search {
     problem => {
       @tailrec
       def recur(frontier: Frontier[S, A], nodeExpander: NodeExpander[S, A]): SearchResult[Seq[A]] =
-        frontier.headOption match {
+        frontier.first match {
           case Some(node) if problem.goalTest(node.state) => Success(solutionActions(node))
           case Some(node) =>
             val (children, newNodeExpander) = nodeExpander(problem, node)
-            recur(frontier.tail ++ children, newNodeExpander)
+            recur(frontier.rest addAll children, newNodeExpander)
           case None => Failure
         }
-      recur(frontier ++ Traversable(Node[S, A](problem.initialState, None, None, 0)), nodeExpander)
+      recur(frontier add Node[S, A](problem.initialState, None, None, 0), nodeExpander)
     }
 }

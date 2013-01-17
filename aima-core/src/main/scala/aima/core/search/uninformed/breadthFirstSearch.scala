@@ -18,7 +18,6 @@
 package aima.core.search.uninformed
 
 import aima.core.search._
-import scala.collection.immutable
 
 /**
  * Artificial Intelligence A Modern Approach (3rd Edition): Figure 3.11, page
@@ -50,5 +49,5 @@ import scala.collection.immutable
  * Date: 11/21/12
  */
 object breadthFirstSearch {
-  def apply[S, A](search: FrontierSearch[S, A]): Search[S, A, Seq[A]] = search(immutable.Queue[Node[S, A]]())
+  def apply[S, A](search: FrontierSearch[S, A]): Search[S, A, Seq[A]] = search(QueueFrontier())
 }

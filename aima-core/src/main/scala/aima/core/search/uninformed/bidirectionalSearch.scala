@@ -9,7 +9,7 @@
  * Aima-scala is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU General Public License for more derests.
  *
  * You should have received a copy of the GNU General Public License
  * along with aima-scala.  If not, see <http://www.gnu.org/licenses/>.
@@ -54,9 +54,9 @@ object bidirectionalSearch {
 
     def expandFrontier(problem: Problem[S, A], node: Node[S, A], frontier: Frontier[S, A], explored: Explored[S, A]) = {
       val children = problem.actionsFor(node.state) map { a => createChildNode(problem, node, a) }
-      children.foldRight(frontier.tail) {
+      children.foldRight(frontier.rest) {
         case (child, f) if f.exists(_ == child) || explored.exists(_ == child) || node == child => f
-        case (child, f) => f ++ Traversable(child)
+        case (child, f) => f add child
       }
     }
 
@@ -112,6 +112,6 @@ object bidirectionalSearch {
     }
     val startOpNode = Node[S, A](originalProblem.initialState, None, None, 0)
     val startRpNode = Node[S, A](reverseProblem.initialState, None, None, 0)
-    recur(opFrontier ++ Traversable(startOpNode), rpFrontier ++ Traversable(startRpNode), Set(), Set()).result
+    recur(opFrontier add startOpNode, rpFrontier add startRpNode, Set(), Set()).result
   }
 }

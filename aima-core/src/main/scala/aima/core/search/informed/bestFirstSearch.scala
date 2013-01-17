@@ -37,5 +37,5 @@ import scala.collection.mutable
  */
 object bestFirstSearch {
   def apply[S, A](search: FrontierSearch[S, A])(order: Ordering[Node[S, A]]): Search[S, A, Seq[A]] =
-    search(mutable.PriorityQueue()(order))
+    search(PriorityQueueFrontier(order))
 }
