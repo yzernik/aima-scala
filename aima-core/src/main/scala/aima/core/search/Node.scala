@@ -40,11 +40,15 @@ package aima.core.search
  * Author: Alex DiCarlo (dicarlo2)
  * Date: 11/21/12
  */
-class Node[S, A](val state: S, val parent: Option[Node[S, A]], val action: Option[A], val pathCost: Double) {
+private[search] class Node[S, A](
+    val state: S,
+    val parent: Option[Node[S, A]],
+    val action: Option[A],
+    val pathCost: Double) {
   lazy val pathToRoot: Seq[Node[S, A]] = parent.foldLeft(Seq(this))((seq, parent) => parent.pathToRoot ++ seq)
 
   override def equals(other: Any): Boolean = other match {
-    case that: Node[S,A] => (that canEqual this) && state == that.state
+    case that: Node[S, A] => (that canEqual this) && state == that.state
     case _ => false
   }
 
