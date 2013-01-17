@@ -24,6 +24,8 @@ case class EightPuzzleState private[eightpuzzle](board: IndexedSeq[IndexedSeq[In
   require((0 to 8) forall {tile => board exists {_ contains tile}},
     s"Board did not contain every number between 0 and 8: $board")
 
+  val complete: Boolean = board.flatten == (0 to 8)
+
   def self: IndexedSeq[IndexedSeq[Int]] = board
 
   def indexOf(tile: Int): (Int, Int) = {
@@ -33,10 +35,10 @@ case class EightPuzzleState private[eightpuzzle](board: IndexedSeq[IndexedSeq[In
   }
 
   def canMoveGap(direction: MoveGap): Boolean = direction match {
-    case Left => indexOf(0)._1 != 0
+    case Left  => indexOf(0)._1 != 0
     case Right => indexOf(0)._1 != 2
-    case Up => indexOf(0)._2 != 0
-    case Down => indexOf(0)._2 != 2
+    case Up    => indexOf(0)._2 != 0
+    case Down  => indexOf(0)._2 != 2
   }
 
   def moveGap(direction: MoveGap): EightPuzzleState = {
@@ -50,13 +52,11 @@ case class EightPuzzleState private[eightpuzzle](board: IndexedSeq[IndexedSeq[In
 
     val gap = indexOf(0)
     direction match {
-      case Left if canMoveGap(Left) => swap(gap, (gap._1 - 1, gap._2))
+      case Left if canMoveGap(Left)   => swap(gap, (gap._1 - 1, gap._2))
       case Right if canMoveGap(Right) => swap(gap, (gap._1 + 1, gap._2))
-      case Up if canMoveGap(Up) => swap(gap, (gap._1, gap._2 - 1))
-      case Down if canMoveGap(Down) => swap(gap, (gap._1, gap._2 + 1))
+      case Up if canMoveGap(Up)       => swap(gap, (gap._1, gap._2 - 1))
+      case Down if canMoveGap(Down)   => swap(gap, (gap._1, gap._2 + 1))
       case _ => throw new IllegalArgumentException(s"Cannot move gap $direction in board $board")
     }
   }
-
-  val complete: Boolean = board.flatten == (0 to 8)
 }
