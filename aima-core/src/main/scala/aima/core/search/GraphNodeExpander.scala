@@ -17,19 +17,18 @@
 
 package aima.core.search
 
-import aima.core.search.Node.createChildNode
-
 /**
  * @author Alex DiCarlo
  */
-final class GraphNodeExpander[S, A] private(explored: Set[Node[S, A]]) extends NodeExpander[S, A] {
+final class GraphNodeExpander[S, A] private(treeNodeExpander: NodeExpander[S, A], explored: Set[Node[S, A]])
+  extends NodeExpander[S, A] {
   def apply(problem: Problem[S, A], node: Node[S, A]): (Seq[Node[S, A]], NodeExpander[S, A]) = {
-    val newExplored = explored + node
-    val children = problem actionsFor node.state map {createChildNode(problem, node, _)} filterNot newExplored
-    (children, new GraphNodeExpander(newExplored))
+    val (children, newTreeNodeExpander) = treeNodeExpander(problem, node)
+    (children filterNot explored, new GraphNodeExpander(newTreeNodeExpander, explored ++ children))
   }
 }
 
 object GraphNodeExpander {
-  def apply[S, A](): NodeExpander[S, A] = new GraphNodeExpander(Set())
+  def apply[S, A](treeNodeExpander: NodeExpander[S, A] = TreeNodeExpander[S, A]()): NodeExpander[S, A] =
+    new GraphNodeExpander(treeNodeExpander, Set())
 }
