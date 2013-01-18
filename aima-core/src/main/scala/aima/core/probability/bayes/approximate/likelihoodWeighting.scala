@@ -1,4 +1,6 @@
 /*
+ * Copyright 2012, 2013 Alex DiCarlo
+ *
  * This file is part of aima-scala.
  *
  * Aima-scala is free software: you can redistribute it and/or modify
