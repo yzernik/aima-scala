@@ -16,23 +16,11 @@
  * You should have received a copy of the GNU General Public License
  * along with aima-scala.  If not, see <http://www.gnu.org/licenses/>.
  */
-name := "aima-core"
 
-version := "0.1"
+package aima.core.search
 
-scalaVersion := "2.10.0"
 
-scalacOptions ++= Seq("-optimise", "-deprecation", "-unchecked")
-
-resolvers ++= Seq(
-  "Sonatype Snapshots" at "http://oss.sonatype.org/content/repositories/snapshots",
-  "Sonatype Releases" at "http://oss.sonatype.org/content/repositories/releases"
-)
-
-libraryDependencies += "org.scalacheck" %% "scalacheck" % "1.10.0" % "test"
-
-libraryDependencies += "org.scalatest" % "scalatest_2.10" % "1.9.1" % "test"
-
-libraryDependencies += "org.scalamock" %% "scalamock-scalatest-support" % "3.1-SNAPSHOT" % "test"
-
-libraryDependencies += "nl.jqno.equalsverifier" % "equalsverifier" % "1.1.3" % "test"
+class NodeTest extends SearchFixture {
+  feature("Node") {
+  }
+}
